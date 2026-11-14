@@ -135,12 +135,21 @@ def display_cvss(rows):
 def drop_component_rows(affected, curated, kev, component_products, stats):
   """Component-CVE rule: a CVE with an NVD row for a component product (openssl) loses its NVD rows for other products.
 
-  A server banner does not tell which OpenSSL the product bundles. Kept: curated pairs and KEV CVEs."""
+  A server banner does not tell which OpenSSL the product bundles. Kept: curated pairs and KEV CVEs.
+  Returns the dropped (product, cve) pairs: the lost-CVE gate excuses them."""
+  dropped = set()
   comp_cves = {k[1] for k, row in affected.items() if row[0] == "nvd" and k[0] in component_products}
   for key in [k for k, row in affected.items() if row[0] == "nvd" and k[1] in comp_cves and k[0] not in component_products
               and (k[0], k[1]) not in curated and k[1] not in kev]:
     del affected[key]
+    dropped.add((key[0], key[1]))
     stats["component_cve_dropped"] += 1
+  return dropped
+
+
+def superseded_pairs(supersede, affected):
+  """The supersede pairs the feed covers with at least one range (non-`==`) row; the others keep their curated rows."""
+  return {(k[0], k[1]) for k in affected if (k[0], k[1]) in supersede and not k[2].startswith("==")}
 
 
 def assemble(cfg, cache, stats, baseline_cves=frozenset()):
@@ -183,9 +192,10 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
       else:
         add(prod, cve, cons, "cna", "tentative", "cna_range")
   curated = {(r["product"], r["cve_id"]) for r in overlay_rows}
-  drop_component_rows(affected, curated, kev, cfg["rules"]["component_products"], stats)
-  generated = {(k[0], k[1]) for k in affected}
-  superseded = cfg["supersede"] & generated  # partial curated rows: the feed's full ranges win when the feed has any
+  # The component rule runs before supersede (no supersede pair is an OpenSSL CVE today), so a dropped pair never supersedes.
+  component_dropped = drop_component_rows(affected, curated, kev, cfg["rules"]["component_products"], stats)
+  stats["component_dropped_pairs"] = sorted([p, c] for p, c in component_dropped)
+  superseded = superseded_pairs(cfg["supersede"], affected)  # partial curated rows: the feed's ranges win when it has a range row
   stats["curated_superseded"] = len(superseded)
   for key in [k for k in affected if (k[0], k[1]) in curated - superseded]:
     del affected[key]

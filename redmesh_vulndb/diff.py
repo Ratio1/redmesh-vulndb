@@ -213,11 +213,12 @@ def gate_size(path, max_bytes):
   return {"ok": size <= max_bytes, "detail": {"bytes": size, "max": max_bytes}}
 
 
-def run_gates(db_path, root, golden=None, baseline=None, limits=None):
+def run_gates(db_path, root, golden=None, baseline=None, limits=None, excused=()):
   """Run every gate on a built database. Returns {gate: {ok, detail}}; `ok` for all means the build passes.
 
   With a real `baseline` (the pairs of the previous build) the row-delta gate runs, and a lost pair whose CVE is
-  now a REJECTED tombstone is excused. Without one the lost check uses the overlay pairs and excuses nothing."""
+  now a REJECTED tombstone is excused, and so is a pair in `excused` (the build's component-rule drops).
+  Without one the lost check uses the overlay pairs and excuses nothing."""
   limits = {**LIMITS, **(limits or {})}
   root = Path(root)
   golden = golden or root / "tests/golden"
@@ -232,14 +233,16 @@ def run_gates(db_path, root, golden=None, baseline=None, limits=None):
     now = pairs(db)
     lost = lost_pairs(baseline if baseline is not None else overlay_pairs(root), now, allow)
     tombstoned = 0
+    excused = {tuple(pc) for pc in excused}
     if baseline is not None:
       rejected = {c for (c,) in db.execute("SELECT cve_id FROM vuln WHERE state='REJECTED'")}
       tombstoned = sum(c in rejected for _, c in lost["unlisted"])
-      lost["unlisted"] = [pc for pc in lost["unlisted"] if pc[1] not in rejected]
-      kept = {pc for pc in baseline if not (pc not in now and pc[1] in rejected)}  # tombstoned losses are not counted
+      lost["unlisted"] = [pc for pc in lost["unlisted"] if pc[1] not in rejected and tuple(pc) not in excused]
+      kept = {pc for pc in baseline if not (pc not in now and (pc[1] in rejected or pc in excused))}  # excused losses are not counted
       out["row_delta"] = gate_row_delta(Counter(p for p, _ in kept), Counter(p for p, _ in now), limits["delta_pct"], limits["delta_floor"],
                                         read_delta_overrides(root / "allowlist/delta.tsv"))
     out["lost_cves"] = {"ok": not lost["unlisted"], "detail": {"allowed": len(lost["allowed"]), "tombstoned": tombstoned,
+                                                              "excused": len(excused & (baseline or set()) - now),
                                                               "unlisted": lost["unlisted"][:10]}}
   db.close()
   out["size"] = gate_size(db_path, limits["max_bytes"])

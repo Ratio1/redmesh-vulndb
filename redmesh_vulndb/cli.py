@@ -38,7 +38,8 @@ def cmd_build(a):
   if a.baseline:
     record["diff"] = diff_mod.diff_dbs(a.baseline, a.out)
     baseline = diff_mod.baseline_pairs(a.baseline)
-  record["gates"] = diff_mod.run_gates(a.out, a.root, baseline=baseline, limits=_limits(a))
+  record["gates"] = diff_mod.run_gates(a.out, a.root, baseline=baseline, limits=_limits(a),
+                                   excused=record["stats"].get("component_dropped_pairs", []))
   Path(str(a.out) + ".build.json").write_text(_dump(record) + "\n")
   failed = [k for k, v in record["gates"].items() if not v["ok"]]
   print(f"gates: {'FAILED ' + ', '.join(failed) if failed else 'all passed'}")
@@ -51,7 +52,10 @@ def cmd_diff(a):
 
 
 def cmd_gate(a):
-  res = diff_mod.run_gates(a.db, a.root, baseline=diff_mod.baseline_pairs(a.baseline) if a.baseline else None, limits=_limits(a))
+  record = Path(str(a.db) + ".build.json")  # the build's record names the pairs its component rule dropped
+  excused = json.loads(record.read_text()).get("stats", {}).get("component_dropped_pairs", []) if record.exists() else []
+  res = diff_mod.run_gates(a.db, a.root, baseline=diff_mod.baseline_pairs(a.baseline) if a.baseline else None, limits=_limits(a),
+                           excused=excused)
   print(_dump(res))
   return 0 if all(v["ok"] for v in res.values()) else 1
 

@@ -133,7 +133,8 @@ def test_component_cve_rule_drops_other_products_nvd_rows():
     ("mysql", "CVE-3", "<5.7.1"): row("nvd"),        # no openssl row: kept
   }
   stats = build.Counter()
-  build.drop_component_rows(affected, {("mariadb", "CVE-1")}, {"CVE-2": "2024-01-01"}, frozenset({"openssl"}), stats)
+  dropped = build.drop_component_rows(affected, {("mariadb", "CVE-1")}, {"CVE-2": "2024-01-01"}, frozenset({"openssl"}), stats)
+  assert dropped == {("mysql", "CVE-1")}
   assert stats["component_cve_dropped"] == 1
   assert ("mysql", "CVE-1", "<5.7.36") not in affected and len(affected) == 6
 
@@ -144,23 +145,36 @@ def test_supersede_pairs_listed_in_product_map():
   assert len(pairs) == 7 and ["apache", "CVE-2017-9798"] in pairs
 
 
-def test_supersede_pair_keeps_generated_rows_else_curated(root_copy, tmp_path):
-  """With a feed row for the pair the curated row is replaced; a supersede pair without feed rows stays curated."""
+def test_supersede_pair_needs_a_feed_range_row_else_curated(root_copy, tmp_path):
+  """openssh CVE-2018-15473 has an NVD range row in the fixture, apache CVE-2021-41773 only an exact one, and
+  CVE-9999-0001 none: only the first pair is replaced by the feed."""
   pm = root_copy / "product_map.toml"
+  pm.write_text(pm.read_text().replace('pairs = [', 'pairs = [["openssh", "CVE-2018-15473"], ["apache", "CVE-2021-41773"], ["apache", "CVE-9999-0001"], ', 1))
   data = json.loads((root_copy / "overlay/curated.json").read_text())
-  rows = [r for r in data["rows"] if r["cve_id"] == "CVE-2021-41773"]
-  assert rows and all(r["product"] == "apache" for r in rows)
-  first = tmp_path / "a.sqlite"
-  build.build(FIXTURE_CACHE, first, root=root_copy, log=lambda *_: None)
-  assert sqlite3.connect(first).execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='curated'").fetchone()[0] > 0
-  pm.write_text(pm.read_text().replace('pairs = [', 'pairs = [["apache", "CVE-2021-41773"], ["apache", "CVE-9999-0001"], ', 1))
-  data["rows"].append({"product": "apache", "constraint": "<2.4.1", "cve_id": "CVE-9999-0001", "severity": "HIGH",
-                       "title": "no feed row", "cwe": "", "client_side": 0})
+  for cve, product in (("CVE-2018-15473", "openssh"), ("CVE-9999-0001", "apache")):
+    data["rows"] = [r for r in data["rows"] if r["cve_id"] != cve]
+    data["rows"].append({"product": product, "constraint": "<2.4.1", "cve_id": cve, "severity": "HIGH", "title": "t", "cwe": "", "client_side": 0})
   data["row_count"] = len(data["rows"])
   (root_copy / "overlay/curated.json").write_text(json.dumps(data))
-  second = tmp_path / "b.sqlite"
-  build.build(FIXTURE_CACHE, second, root=root_copy, log=lambda *_: None)
-  con = sqlite3.connect(second)
-  assert con.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='curated'").fetchone()[0] == 0
-  assert con.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='nvd'").fetchone()[0] > 0
-  assert con.execute("SELECT source FROM affected WHERE cve_id='CVE-9999-0001'").fetchall() == [("curated",)]
+  out = tmp_path / "b.sqlite"
+  build.build(FIXTURE_CACHE, out, root=root_copy, log=lambda *_: None)
+  con = sqlite3.connect(out)
+  sources = lambda cve: {s for (s,) in con.execute("SELECT source FROM affected WHERE cve_id=?", (cve,))}  # noqa: E731
+  assert sources("CVE-2018-15473") == {"nvd"}
+  assert sources("CVE-2021-41773") == {"curated"}
+  assert sources("CVE-9999-0001") == {"curated"}
+
+
+def test_all_configured_supersede_pairs_supersede_in_real_data_shape():
+  """The NVD rows of the 7 pairs in the 2026-11-14 full build: each has a range row, so the feed replaces curated.
+  Exact-only pairs (an `==` row alone) stay curated."""
+  import tomllib
+  pairs = {tuple(p) for p in tomllib.loads((ROOT / "product_map.toml").read_text())["supersede"]["pairs"]}
+  real = {("apache", "CVE-2017-9798"): ["<=2.2.34", "==2.4.0", "==2.4.1"], ("openssh", "CVE-2016-6210"): ["<=7.2"],
+          ("mysql", "CVE-2016-6664"): [">=5.5.0,<=5.5.51"], ("jetty", "CVE-2023-36478"): [">=9.3.0,<9.4.53"],
+          ("samba", "CVE-2023-3961"): ["<4.17.12"], ("postfix", "CVE-2023-51764"): ["<3.5.23"],
+          ("elasticsearch", "CVE-2024-23450"): [">=7.0.0,<7.17.19"]}
+  affected = {(p, c, cons): ["nvd"] for (p, c), conss in real.items() for cons in conss}
+  assert set(real) == pairs and build.superseded_pairs(pairs, affected) == pairs
+  exact_only = {("apache", "CVE-2017-9798", "==2.4.0"): ["nvd"]}
+  assert build.superseded_pairs(pairs, exact_only) == set()
