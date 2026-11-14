@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+
+# Downloaded feeds and build output are never committed
+data/
+build/
+dist/
+*.sqlite
+*.sqlite.zst
+*.zst
