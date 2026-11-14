@@ -2,13 +2,13 @@
 
 Copied verbatim from edge-node ``extensions/business/cybersec/red_mesh/cve_db.py``
 (``_matches_constraint``, ``_parse_version``, ``_compare_versions``, ``_check_single`` and the
-tables they use) at commit 3205d18. A matcher fix in edge-node bumps both copies in one
+tables they use) at commit f763995. A matcher fix in edge-node bumps both copies in one
 cross-repo change; ``tests/test_matcher_parity.py`` compares them when EDGE_NODE_PATH is set.
 Only the header and ``validate_constraint`` below are builder code.
 """
 import re
 
-MATCHER_REV = "edge-node@3205d18"
+MATCHER_REV = "edge-node@f763995"
 
 
 def _matches_constraint(version: str, constraint: str, product: str = "") -> bool:
@@ -64,7 +64,8 @@ def _parse_version(version: str, product: str = ""):
   numbers = [int(x) for x in m.group(1).split(".")]
   rest = m.group(2).lower()
   tail = (0, 0, 0)
-  pre = re.match(r"^[-_.~]?(alpha|beta|rc|pre|dev|milestone|m|a|b)(\d*)", rest)
+  # `(?![a-z])`: the tag ends there, so `-precise` and `-devel` are not `pre` and `dev`.
+  pre = re.match(r"^[-_.~]?(alpha|beta|rc|pre|dev|milestone|m|a|b)(\d*)(?![a-z])", rest)
   if pre:
     tag, num = pre.group(1), pre.group(2)
     # A bare single letter is a release letter, not a pre-release, unless a

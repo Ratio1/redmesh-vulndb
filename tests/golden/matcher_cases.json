@@ -1,5 +1,5 @@
 {
- "source_commit": "3205d18",
+ "source_commit": "f763995",
  "cases": [
   {
    "product": "",
@@ -196,6 +196,48 @@
    "constraint": ">=1.0.2",
    "expected": true,
    "why": "openssl: letter release after base"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-precise",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -precise ends in letters: a release, not pre"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-devel",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -devel is a release, not dev"
+  },
+  {
+   "product": "",
+   "version": "1.2.3rc1",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: rc1 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3M3",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: M3 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-beta",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -beta still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3.M1",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: .M1 still a pre-release"
   }
  ]
 }

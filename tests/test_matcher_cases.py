@@ -8,8 +8,8 @@ GOLDEN = Path(__file__).parent / "golden"
 
 def test_matcher_cases_from_edge_node():
   data = json.loads((GOLDEN / "matcher_cases.json").read_text())
-  assert data["source_commit"] == "3205d18" and MATCHER_REV == "edge-node@3205d18"
-  assert len(data["cases"]) == 28
+  assert data["source_commit"] == "f763995" and MATCHER_REV == "edge-node@f763995"
+  assert len(data["cases"]) == 34
   for c in data["cases"]:
     assert _matches_constraint(c["version"], c["constraint"], c["product"]) == c["expected"], c["why"]
 
