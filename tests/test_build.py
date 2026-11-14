@@ -14,7 +14,7 @@ def test_schema_and_meta(built, db):
   assert db.execute("PRAGMA user_version").fetchone()[0] == build.MODEL == 1
   assert db.execute("PRAGMA page_size").fetchone()[0] == build.PAGE_SIZE
   meta = dict(db.execute("SELECT k, v FROM meta"))
-  assert meta["schema"] == "1.0.0" and meta["matcher_rev"] == MATCHER_REV == "edge-node@f763995"
+  assert meta["schema"] == "1.0.0" and meta["matcher_rev"] == MATCHER_REV == "edge-node@6bd9d71"
   assert meta["build_id"].startswith("vulndb-") and meta["epss_model_version"].startswith("v")
   assert meta["snapshot_nvd_overrides"] == "7c9258bb6d2ebb371a3b55b20a608f64c0e73753"
   assert [c[1] for c in db.execute("PRAGMA table_info(affected)")] == diff.expected_columns()["affected"]

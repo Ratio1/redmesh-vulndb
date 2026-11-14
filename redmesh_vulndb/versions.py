@@ -2,13 +2,13 @@
 
 Copied verbatim from edge-node ``extensions/business/cybersec/red_mesh/cve_db.py``
 (``_matches_constraint``, ``_parse_version``, ``_compare_versions``, ``_check_single`` and the
-tables they use) at commit f763995. A matcher fix in edge-node bumps both copies in one
+tables they use) at commit 6bd9d71. A matcher fix in edge-node bumps both copies in one
 cross-repo change; ``tests/test_matcher_parity.py`` compares them when EDGE_NODE_PATH is set.
 Only the header and ``validate_constraint`` below are builder code.
 """
 import re
 
-MATCHER_REV = "edge-node@f763995"
+MATCHER_REV = "edge-node@6bd9d71"
 
 
 def _matches_constraint(version: str, constraint: str, product: str = "") -> bool:
@@ -29,10 +29,10 @@ def _matches_constraint(version: str, constraint: str, product: str = "") -> boo
 
 
 # Pre-release tags sort BEFORE the release they precede. Ascending rank:
-# dev < alpha < beta < milestone < rc/pre; `a`/`b` are alpha/beta.
+# dev < alpha < beta < milestone < rc/pre/preview/prerelease; `a`/`b` are alpha/beta.
 _PRE_RANK = {
   "dev": 0, "alpha": 1, "a": 1, "beta": 2, "b": 2,
-  "milestone": 3, "m": 3, "rc": 4, "pre": 4,
+  "milestone": 3, "m": 3, "rc": 4, "pre": 4, "preview": 4, "prerelease": 4,
 }
 # Products whose single-letter suffix is a release (openssl 1.0.1f, proftpd
 # 1.3.5b), not a pre-release.
@@ -65,7 +65,7 @@ def _parse_version(version: str, product: str = ""):
   rest = m.group(2).lower()
   tail = (0, 0, 0)
   # `(?![a-z])`: the tag ends there, so `-precise` and `-devel` are not `pre` and `dev`.
-  pre = re.match(r"^[-_.~]?(alpha|beta|rc|pre|dev|milestone|m|a|b)(\d*)(?![a-z])", rest)
+  pre = re.match(r"^[-_.~]?(alpha|beta|rc|prerelease|preview|pre|dev|milestone|m|a|b)(\d*)(?![a-z])", rest)
   if pre:
     tag, num = pre.group(1), pre.group(2)
     # A bare single letter is a release letter, not a pre-release, unless a
