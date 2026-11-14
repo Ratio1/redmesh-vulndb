@@ -1,4 +1,4 @@
-"""The vendored matcher equals the edge-node one. Needs EDGE_NODE_PATH (an edge-node checkout at 3205d18)."""
+"""The vendored matcher equals the edge-node one. Needs EDGE_NODE_PATH (an edge-node checkout at f763995)."""
 import ast
 import json
 import os
