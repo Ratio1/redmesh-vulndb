@@ -14,10 +14,12 @@ file whose sha256 differs from the manifest. Redirects must stay on https.
 import datetime
 import hashlib
 import json
+import os
 import re
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlsplit
 
 USER_AGENT = "redmesh-vulndb-builder/0.1"
 NVD_BASE = "https://nvd.nist.gov/feeds/json/cve/2.0/"
@@ -41,12 +43,23 @@ class _HttpsOnly(urllib.request.HTTPRedirectHandler):
   def redirect_request(self, req, fp, code, msg, headers, newurl):
     if not newurl.startswith("https://"):
       raise urllib.error.URLError(f"refusing redirect to non-https URL {newurl}")
-    return super().redirect_request(req, fp, code, msg, headers, newurl)
+    new = super().redirect_request(req, fp, code, msg, headers, newurl)
+    if new is not None and urlsplit(newurl).netloc != urlsplit(req.full_url).netloc:
+      new.remove_header("Authorization")  # the token never follows a redirect to another host
+    return new
+
+
+def _request(url):
+  """Request with the job token (GH_TOKEN or GITHUB_TOKEN, read-only) on api.github.com calls only; unauthenticated without one."""
+  req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+  token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+  if token and urlsplit(url).netloc == "api.github.com":
+    req.add_header("Authorization", f"Bearer {token}")
+  return req
 
 
 def _open(url):
-  req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-  return urllib.request.build_opener(_HttpsOnly).open(req, timeout=120)
+  return urllib.request.build_opener(_HttpsOnly).open(_request(url), timeout=120)
 
 
 def check_sha(sha):

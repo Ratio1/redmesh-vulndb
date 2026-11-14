@@ -6,6 +6,7 @@ the maximum bound gives 0 findings, T4 the matcher cases. The reader-latency gat
 import json
 import re
 import sqlite3
+from collections import Counter
 from pathlib import Path
 
 from .build import DDL, MODEL, band
@@ -35,6 +36,15 @@ def baseline_pairs(path):
     db.close()
 
 
+def baseline_cves(path):
+  """Every CVE id (either state) of a previous build: the tombstone candidates for the next build."""
+  db = connect(path)
+  try:
+    return {r[0] for r in db.execute("SELECT cve_id FROM vuln")}
+  finally:
+    db.close()
+
+
 def read_allowlist(path):
   """TSV `product<TAB>cve_id<TAB>reason`; `*` as product matches any product. `#` starts a comment."""
   out = {}
@@ -60,11 +70,11 @@ def diff_dbs(old_path, new_path):
   """Per-product pair delta, KEV changes, display severity band changes, schema change between two builds."""
   old, new = connect(old_path), connect(new_path)
   po, pn = pairs(old), pairs(new)
-  by_product = {}
+  by_product, old_counts = {}, Counter(p for p, _ in po)
   for p, c in po - pn:
-    by_product.setdefault(p, {"added": 0, "removed": 0})["removed"] += 1
+    by_product.setdefault(p, {"old": old_counts[p], "added": 0, "removed": 0})["removed"] += 1
   for p, c in pn - po:
-    by_product.setdefault(p, {"added": 0, "removed": 0})["added"] += 1
+    by_product.setdefault(p, {"old": old_counts[p], "added": 0, "removed": 0})["added"] += 1
   vo = {r[0]: r[1:] for r in old.execute("SELECT cve_id, kev, display_cvss_score FROM vuln")}
   vn = {r[0]: r[1:] for r in new.execute("SELECT cve_id, kev, display_cvss_score FROM vuln")}
   common = vo.keys() & vn.keys()
@@ -171,8 +181,44 @@ def gate_t4(golden):
   return {"ok": not bad, "detail": {"cases": len(cases), "failed": bad}}
 
 
-def run_gates(db_path, root, golden=None, baseline=None):
-  """Run every gate on a built database. Returns {gate: {ok, detail}}; `ok` for all means the build passes."""
+LIMITS = {"delta_pct": 25, "delta_floor": 20, "max_bytes": 32 * 2**20}
+
+
+def read_delta_overrides(path):
+  """TSV `product<TAB>reason`: products exempt from the row-delta gate for a run with a known large change. The file is optional."""
+  if not Path(path).exists():
+    return {}
+  out = {}
+  for line in Path(path).read_text().splitlines():
+    if line.strip() and not line.startswith("#"):
+      product, reason = (line.split("\t") + ["", ""])[:2]
+      if not product.strip() or not reason.strip():
+        raise ValueError(f"delta override line without a product or reason: {line!r}")
+      out[product.strip()] = reason.strip()
+  return out
+
+
+def gate_row_delta(old, new, pct, floor, exempt=None):
+  """Per-product (product, CVE) pair counts within limits: a change of more than max(floor, pct % of old) fails.
+  `old` and `new` are {product: count}; a product missing from `new` counts 0. A product absent from `old` is new in
+  the product map and is exempt, as is a product in `exempt` ({product: reason}, from allowlist/delta.tsv)."""
+  exempt = exempt or {}
+  over = [[p, old[p], new.get(p, 0)] for p in sorted(old)
+          if p not in exempt and abs(new.get(p, 0) - old[p]) > max(floor, old[p] * pct / 100)]
+  return {"ok": not over, "detail": {"over": over, "pct": pct, "floor": floor, "exempt": sorted(p for p in exempt if p in old)}}
+
+
+def gate_size(path, max_bytes):
+  size = Path(path).stat().st_size
+  return {"ok": size <= max_bytes, "detail": {"bytes": size, "max": max_bytes}}
+
+
+def run_gates(db_path, root, golden=None, baseline=None, limits=None):
+  """Run every gate on a built database. Returns {gate: {ok, detail}}; `ok` for all means the build passes.
+
+  With a real `baseline` (the pairs of the previous build) the row-delta gate runs, and a lost pair whose CVE is
+  now a REJECTED tombstone is excused. Without one the lost check uses the overlay pairs and excuses nothing."""
+  limits = {**LIMITS, **(limits or {})}
   root = Path(root)
   golden = golden or root / "tests/golden"
   allow = read_allowlist(root / "allowlist/lost.tsv")
@@ -183,7 +229,18 @@ def run_gates(db_path, root, golden=None, baseline=None):
     out["t2_first_fixed"] = gate_t2(db)
     out["t3_above_max"] = gate_t3(db, {(p, c): r for (p, c), r in allow.items() if r.startswith("open-ended")})
     out["t4_matcher"] = gate_t4(golden)
-    lost = lost_pairs(baseline if baseline is not None else overlay_pairs(root), pairs(db), allow)
-    out["lost_cves"] = {"ok": not lost["unlisted"], "detail": {"allowed": len(lost["allowed"]), "unlisted": lost["unlisted"][:10]}}
+    now = pairs(db)
+    lost = lost_pairs(baseline if baseline is not None else overlay_pairs(root), now, allow)
+    tombstoned = 0
+    if baseline is not None:
+      rejected = {c for (c,) in db.execute("SELECT cve_id FROM vuln WHERE state='REJECTED'")}
+      tombstoned = sum(c in rejected for _, c in lost["unlisted"])
+      lost["unlisted"] = [pc for pc in lost["unlisted"] if pc[1] not in rejected]
+      kept = {pc for pc in baseline if not (pc not in now and pc[1] in rejected)}  # tombstoned losses are not counted
+      out["row_delta"] = gate_row_delta(Counter(p for p, _ in kept), Counter(p for p, _ in now), limits["delta_pct"], limits["delta_floor"],
+                                        read_delta_overrides(root / "allowlist/delta.tsv"))
+    out["lost_cves"] = {"ok": not lost["unlisted"], "detail": {"allowed": len(lost["allowed"]), "tombstoned": tombstoned,
+                                                              "unlisted": lost["unlisted"][:10]}}
   db.close()
+  out["size"] = gate_size(db_path, limits["max_bytes"])
   return out

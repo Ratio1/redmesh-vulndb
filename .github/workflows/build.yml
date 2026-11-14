@@ -1,0 +1,147 @@
+name: build
+
+# Weekly gated build of the vulnerability database. A release is published only when every gate passes.
+# Publish: draft release, upload assets, publish (immutable releases: assets cannot be added after publish).
+on:
+  schedule:
+    - cron: "17 4 * * 1"  # Mondays, odd minute
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vulndb-build
+  cancel-in-progress: false
+
+env:
+  ASSET: vulndb.sqlite.zst
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2  # v10.3.3
+        with:
+          version: "0.13.7"
+      - name: Fetch the previous release as the baseline
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p baseline
+          # newest published, non-prerelease vulndb-* release (gh lists newest first)
+          tag=$(gh release list --repo "$GITHUB_REPOSITORY" --exclude-drafts --exclude-pre-releases --limit 100 --json tagName \
+            --jq '[.[] | select(.tagName | startswith("vulndb-"))][0].tagName // empty')
+          if [ -z "$tag" ]; then
+            echo "no previous release: building without a baseline"
+            exit 0
+          fi
+          gh release download "$tag" --repo "$GITHUB_REPOSITORY" --dir baseline --pattern "$ASSET" --pattern manifest.json
+          want=$(jq -r .sha256 baseline/manifest.json)
+          echo "$want  baseline/$ASSET" | sha256sum --check
+          zstd -d -q "baseline/$ASSET" -o baseline/baseline.sqlite
+          echo "baseline $tag"
+      - name: Fetch the feeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: uv run --locked redmesh-vulndb fetch --cache cache
+      - name: Build and gate
+        run: |
+          mkdir -p out
+          args=()
+          if [ -f baseline/baseline.sqlite ]; then args+=(--baseline baseline/baseline.sqlite); fi
+          uv run --locked redmesh-vulndb build --offline --cache cache --out out/vulndb.sqlite "${args[@]}"
+      - name: Compress and write the manifest
+        run: |
+          zstd -19 -q out/vulndb.sqlite -o "out/$ASSET"
+          want=$(jq -r .sha256 out/vulndb.sqlite.build.json)
+          got=$(zstd -d -q -c "out/$ASSET" | sha256sum | cut -d' ' -f1)
+          test "$want" = "$got"
+          uv run --locked redmesh-vulndb manifest --db out/vulndb.sqlite --zst "out/$ASSET" --cache cache --out out/manifest.json
+          cp THIRD_PARTY_DATA_NOTICES out/
+          jq '{build_id, flags}' out/manifest.json
+      - name: Keep the build and gate output
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: build-output
+          path: out/*.build.json
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7.0.2
+        with:
+          name: release
+          path: |
+            out/vulndb.sqlite.zst
+            out/manifest.json
+            out/THIRD_PARTY_DATA_NOTICES
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          name: release
+          path: release
+      - name: Verify the artifact against its manifest
+        working-directory: release
+        run: |
+          want=$(jq -r .sha256 manifest.json)
+          echo "$want  $ASSET" | sha256sum --check
+          jq -e '.gate_results | length > 0 and all(.[]; .ok == true)' manifest.json >/dev/null
+      - name: Publish an immutable release (draft, upload, publish)
+        working-directory: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(jq -r .build_id manifest.json)
+          state=$(gh release view "$id" --repo "$GITHUB_REPOSITORY" --json isDraft --jq .isDraft 2>/dev/null || echo absent)
+          case "$state" in
+            false)
+              echo "release $id is published: same inputs, nothing to do"
+              exit 0 ;;
+            true)
+              echo "release $id is a draft from an interrupted run: upload again and publish" ;;
+            absent)
+              jq -r '"content_hash: \(.content_hash)\nsha256: \(.sha256)\nbuilt_at: \(.built_at)\nflags: \(.flags | tojson)"' manifest.json > notes.md
+              gh release create "$id" --repo "$GITHUB_REPOSITORY" --draft --target "$GITHUB_SHA" --title "$id" --notes-file notes.md ;;
+            *)
+              echo "unexpected release state: $state"
+              exit 1 ;;
+          esac
+          gh release upload "$id" --repo "$GITHUB_REPOSITORY" --clobber "$ASSET" manifest.json THIRD_PARTY_DATA_NOTICES
+          gh release edit "$id" --repo "$GITHUB_REPOSITORY" --draft=false
+
+  report-failure:
+    needs: [build, publish]
+    if: failure() || cancelled()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update the build-failure issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          BUILD_RESULT: ${{ needs.build.result }}
+          PUBLISH_RESULT: ${{ needs.publish.result }}
+        run: |
+          gh label create build-failure --repo "$GITHUB_REPOSITORY" --color B60205 --description "vulndb build or publish failed" || true
+          body="The vulndb build or publish job did not succeed (build: ${BUILD_RESULT}, publish: ${PUBLISH_RESULT}). Nothing new was published unless publish succeeded. Run: $RUN_URL"
+          n=$(gh issue list --repo "$GITHUB_REPOSITORY" --label build-failure --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$n" ]; then
+            gh issue comment "$n" --repo "$GITHUB_REPOSITORY" --body "$body"
+          else
+            gh issue create --repo "$GITHUB_REPOSITORY" --label build-failure --title "vulndb build failed" --body "$body"
+          fi
