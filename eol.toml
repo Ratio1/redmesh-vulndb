@@ -1,0 +1,40 @@
+# Oldest supported branch per product, hand-kept; changed only by reviewed PRs.
+# It feeds `eol_unassessed` and the "unsupported version" finding. A product without an entry has
+# no end-of-life assessment. These seed values (2026-11-14) come from the vendor lifecycle pages as
+# the author recalled them, were not re-fetched, and need review before the first release.
+
+[apache]
+oldest_supported = "2.4"
+source = "https://httpd.apache.org/security/vulnerabilities_24.html"
+
+[bind]
+oldest_supported = "9.18"
+source = "https://kb.isc.org/docs/aa-00896"
+
+[mariadb]
+oldest_supported = "10.11"
+source = "https://mariadb.org/about/#maintenance-policy"
+
+[mongodb]
+oldest_supported = "7.0"
+source = "https://www.mongodb.com/legal/support-policy/lifecycles"
+
+[mysql]
+oldest_supported = "8.4"
+source = "https://www.mysql.com/support/eol-notice.html"
+
+[openssl]
+oldest_supported = "3.5"
+source = "https://openssl-library.org/policies/releasestrat/"
+
+[postgresql]
+oldest_supported = "15"
+source = "https://www.postgresql.org/support/versioning/"
+
+[redis]
+oldest_supported = "7.2"
+source = "https://redis.io/docs/latest/operate/rs/references/compatibility/"
+
+[tomcat]
+oldest_supported = "9.0"
+source = "https://tomcat.apache.org/whichversion.html"

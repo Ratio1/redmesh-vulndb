@@ -1,0 +1,9 @@
+# CVEs added to the fixture cache on top of the vulhub EXPECT table and the 9 prototype regressions.
+CVE-2023-52968   # anchore override layered on a CVE NVD has not analysed (mariadb)
+CVE-2024-0760    # override layered (bind)
+CVE-2024-7633    # NVD vulnStatus Rejected; tests give it an overlay row to build a tombstone
+CVE-2026-57200   # CNA-only ranges (asterisk)
+CVE-2026-106023  # CNA ranges (apache)
+CVE-1999-1010    # NVD exact-version enumeration (openssh)
+CVE-2001-0766    # platform-dependent configuration
+CVE-2022-0866    # NVD range with only a lower bound (open-ended, dropped)

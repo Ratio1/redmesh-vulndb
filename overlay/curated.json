@@ -1,0 +1,3372 @@
+{
+ "row_count": 374,
+ "rows": [
+  {
+   "client_side": 0,
+   "constraint": ">=2.0.35,<2.0.51",
+   "cve_id": "CVE-2004-0747",
+   "cwe": "CWE-131",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "APR-util input validation buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.55",
+   "cve_id": "CVE-2006-20001",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "If header memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.0,<2.2.12",
+   "cve_id": "CVE-2009-1955",
+   "cwe": "CWE-776",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "APR-util XML entity expansion DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.0,<=2.2.31",
+   "cve_id": "CVE-2016-5387",
+   "cwe": "CWE-20",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTPoxy proxy header injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.17,<=2.4.23",
+   "cve_id": "CVE-2016-8740",
+   "cwe": "CWE-20",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_http2 request handling DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.29",
+   "cve_id": "CVE-2017-15715",
+   "cwe": "CWE-20",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "FilesMatch newline bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.0,<2.2.33",
+   "cve_id": "CVE-2017-3167",
+   "cwe": "CWE-287",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "ap_get_basic_auth_pw authentication bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.0,<2.2.33",
+   "cve_id": "CVE-2017-3169",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_ssl NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.26",
+   "cve_id": "CVE-2017-3169",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_ssl NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.24,<2.4.26",
+   "cve_id": "CVE-2017-7659",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.32,<2.2.33",
+   "cve_id": "CVE-2017-7668",
+   "cwe": "CWE-126",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP token list parsing out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.24,<2.4.26",
+   "cve_id": "CVE-2017-7668",
+   "cwe": "CWE-126",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP token list parsing out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.2.34",
+   "cve_id": "CVE-2017-7679",
+   "cwe": "CWE-126",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_mime buffer overread"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.2.33",
+   "cve_id": "CVE-2017-9788",
+   "cwe": "CWE-20",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Proxy authorization placeholder memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.26,<2.4.27",
+   "cve_id": "CVE-2017-9789",
+   "cwe": "CWE-416",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 use-after-free under load"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.2.34",
+   "cve_id": "CVE-2017-9798",
+   "cwe": "CWE-416",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Optionsbleed process memory disclosure"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.29",
+   "cve_id": "CVE-2018-1303",
+   "cwe": "CWE-125",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Request header crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2.0,<=2.4.29",
+   "cve_id": "CVE-2018-1312",
+   "cwe": "CWE-287",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Digest authentication nonce generation weakness"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.18,<=2.4.30",
+   "cve_id": "CVE-2018-1333",
+   "cwe": "CWE-400",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 worker exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.37",
+   "cve_id": "CVE-2018-17199",
+   "cwe": "CWE-384",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_session expiry time bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.17,<=2.4.38",
+   "cve_id": "CVE-2019-0211",
+   "cwe": "CWE-416",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "MPM privilege escalation through scoreboard handling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.20,<=2.4.39",
+   "cve_id": "CVE-2019-10081",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 early push memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.18,<=2.4.39",
+   "cve_id": "CVE-2019-10082",
+   "cwe": "CWE-416",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "HTTP/2 session handling use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.20,<2.4.40",
+   "cve_id": "CVE-2019-9517",
+   "cwe": "CWE-400",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 data buffering DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.32,<=2.4.43",
+   "cve_id": "CVE-2020-11984",
+   "cwe": "CWE-120",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_proxy_uwsgi information disclosure and possible RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.20,<2.4.44",
+   "cve_id": "CVE-2020-11993",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 trace/debug request smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.41,<=2.4.46",
+   "cve_id": "CVE-2020-13950",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy_http NULL pointer crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.46",
+   "cve_id": "CVE-2020-35452",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Digest nonce stack overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.20,<2.4.46",
+   "cve_id": "CVE-2020-9490",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 Cache-Digest DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.46",
+   "cve_id": "CVE-2021-26690",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_session cookie NULL pointer crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.46",
+   "cve_id": "CVE-2021-26691",
+   "cwe": "CWE-122",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "SessionHeader stack overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.17,<2.4.49",
+   "cve_id": "CVE-2021-33193",
+   "cwe": "CWE-20",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 method validation bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.48",
+   "cve_id": "CVE-2021-34798",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Malformed request NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.30,<2.4.49",
+   "cve_id": "CVE-2021-36160",
+   "cwe": "CWE-125",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy_uwsgi out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.49",
+   "cve_id": "CVE-2021-39275",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "ap_escape_quotes out-of-bounds write"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.49",
+   "cve_id": "CVE-2021-40438",
+   "cwe": "CWE-918",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_proxy SSRF"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.49,<2.4.50",
+   "cve_id": "CVE-2021-41524",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 request NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.49,<2.4.51",
+   "cve_id": "CVE-2021-41773",
+   "cwe": "CWE-22",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Path traversal + RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.49,<=2.4.50",
+   "cve_id": "CVE-2021-42013",
+   "cwe": "CWE-22",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Path traversal and RCE bypassing CVE-2021-41773 fix"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.7,<2.4.52",
+   "cve_id": "CVE-2021-44224",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Forward proxy crafted URI crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.52",
+   "cve_id": "CVE-2021-44790",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_lua buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.52",
+   "cve_id": "CVE-2022-22719",
+   "cwe": "CWE-665",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Request body out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.52",
+   "cve_id": "CVE-2022-22720",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "HTTP request smuggling through connection handling"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.52",
+   "cve_id": "CVE-2022-22721",
+   "cwe": "CWE-190",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Large XML request body integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.53",
+   "cve_id": "CVE-2022-23943",
+   "cwe": "CWE-190",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_sed out-of-bounds write"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.54",
+   "cve_id": "CVE-2022-26377",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy_ajp request smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.54",
+   "cve_id": "CVE-2022-28615",
+   "cwe": "CWE-190",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "ap_strcmp_match out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=2.4.53",
+   "cve_id": "CVE-2022-29404",
+   "cwe": "CWE-770",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Lua request body memory exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.53,<2.4.54",
+   "cve_id": "CVE-2022-30522",
+   "cwe": "CWE-789",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_sed uncontrolled memory allocation"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.54",
+   "cve_id": "CVE-2022-30556",
+   "cwe": "CWE-200",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_lua websocket information disclosure"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.54",
+   "cve_id": "CVE-2022-31813",
+   "cwe": "CWE-348",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "X-Forwarded header handling weakness"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.55",
+   "cve_id": "CVE-2022-36760",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_proxy_ajp request smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<=2.4.55",
+   "cve_id": "CVE-2023-25690",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_proxy HTTP request smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.30,<2.4.56",
+   "cve_id": "CVE-2023-27522",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy_uwsgi response smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.58",
+   "cve_id": "CVE-2023-31122",
+   "cwe": "CWE-125",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_macro out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.55,<2.4.58",
+   "cve_id": "CVE-2023-43622",
+   "cwe": "CWE-400",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 initial window blocking DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.17,<2.4.59",
+   "cve_id": "CVE-2024-27316",
+   "cwe": "CWE-770",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "HTTP/2 header buffering resource exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.60",
+   "cve_id": "CVE-2024-38474",
+   "cwe": "CWE-116",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_rewrite substitution encoding issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.60",
+   "cve_id": "CVE-2024-38475",
+   "cwe": "CWE-116",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "mod_rewrite escaping flaw \u2014 SSRF / RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.60",
+   "cve_id": "CVE-2024-38476",
+   "cwe": "CWE-829",
+   "product": "apache",
+   "severity": "CRITICAL",
+   "title": "Backend header exploit \u2014 SSRF / local script exec"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.60",
+   "cve_id": "CVE-2024-38477",
+   "cwe": "CWE-476",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.62",
+   "cve_id": "CVE-2024-40725",
+   "cwe": "CWE-444",
+   "product": "apache",
+   "severity": "MEDIUM",
+   "title": "HTTP request smuggling via mod_proxy"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.4.62",
+   "cve_id": "CVE-2024-40898",
+   "cwe": "CWE-918",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Windows mod_rewrite SSRF"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<18.20.1",
+   "cve_id": "CVE-2023-49786",
+   "cwe": "CWE-444",
+   "product": "asterisk",
+   "severity": "MEDIUM",
+   "title": "PJSIP request smuggling via multipart parser"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=19.0.0,<20.5.1",
+   "cve_id": "CVE-2023-49786",
+   "cwe": "CWE-444",
+   "product": "asterisk",
+   "severity": "MEDIUM",
+   "title": "PJSIP request smuggling via multipart parser"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=21.0.0,<21.0.1",
+   "cve_id": "CVE-2023-49786",
+   "cwe": "CWE-444",
+   "product": "asterisk",
+   "severity": "MEDIUM",
+   "title": "PJSIP request smuggling via multipart parser"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<18.24.2",
+   "cve_id": "CVE-2024-42365",
+   "cwe": "CWE-94",
+   "product": "asterisk",
+   "severity": "HIGH",
+   "title": "AMI manager injection via caller ID"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=19.0.0,<20.9.2",
+   "cve_id": "CVE-2024-42365",
+   "cwe": "CWE-94",
+   "product": "asterisk",
+   "severity": "HIGH",
+   "title": "AMI manager injection via caller ID"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=21.0.0,<21.4.2",
+   "cve_id": "CVE-2024-42365",
+   "cwe": "CWE-94",
+   "product": "asterisk",
+   "severity": "HIGH",
+   "title": "AMI manager injection via caller ID"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.1.0,<9.9.7-P2",
+   "cve_id": "CVE-2015-5477",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "TKEY query REQUIRE assertion failure DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.10.0,<9.10.2-P3",
+   "cve_id": "CVE-2015-5477",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "TKEY query REQUIRE assertion failure DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<9.10.4",
+   "cve_id": "CVE-2016-2776",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "Crafted query buffer.c assertion failure DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<9.11.19",
+   "cve_id": "CVE-2020-8617",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "MEDIUM",
+   "title": "TSIG validity check assertion failure DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<9.11.31",
+   "cve_id": "CVE-2021-25216",
+   "cwe": "CWE-120",
+   "product": "bind",
+   "severity": "CRITICAL",
+   "title": "GSSAPI SPNEGO buffer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.0.0,<9.16.33",
+   "cve_id": "CVE-2022-2795",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "MEDIUM",
+   "title": "Flooding targeted resolver with queries DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.18.0,<9.18.7",
+   "cve_id": "CVE-2022-2795",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "MEDIUM",
+   "title": "Flooding targeted resolver with queries DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.19.0,<9.19.5",
+   "cve_id": "CVE-2022-2795",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "MEDIUM",
+   "title": "Flooding targeted resolver with queries DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.16.14,<9.16.33",
+   "cve_id": "CVE-2022-3080",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "TKEY assertion failure DoS on DNAME resolution"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.18.0,<9.18.7",
+   "cve_id": "CVE-2022-3080",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "TKEY assertion failure DoS on DNAME resolution"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.19.0,<9.19.5",
+   "cve_id": "CVE-2022-3080",
+   "cwe": "CWE-617",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "TKEY assertion failure DoS on DNAME resolution"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.11.0,<9.16.42",
+   "cve_id": "CVE-2023-2828",
+   "cwe": "CWE-770",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "Cache exhaustion DoS via crafted queries"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.18.0,<9.18.16",
+   "cve_id": "CVE-2023-2828",
+   "cwe": "CWE-770",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "Cache exhaustion DoS via crafted queries"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.19.0,<9.19.14",
+   "cve_id": "CVE-2023-2828",
+   "cwe": "CWE-770",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "Cache exhaustion DoS via crafted queries"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.0.0,<9.16.46",
+   "cve_id": "CVE-2023-4408",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "DNS message parsing CPU exhaustion DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.18.0,<9.18.22",
+   "cve_id": "CVE-2023-4408",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "DNS message parsing CPU exhaustion DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.19.0,<9.19.20",
+   "cve_id": "CVE-2023-4408",
+   "cwe": "CWE-400",
+   "product": "bind",
+   "severity": "HIGH",
+   "title": "DNS message parsing CPU exhaustion DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.1.1",
+   "cve_id": "CVE-2017-12635",
+   "cwe": "CWE-269",
+   "product": "couchdb",
+   "severity": "CRITICAL",
+   "title": "Admin creation race condition bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.1.1",
+   "cve_id": "CVE-2017-12636",
+   "cwe": "CWE-78",
+   "product": "couchdb",
+   "severity": "HIGH",
+   "title": "OS command injection via query server config"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.0.0,<3.1.2",
+   "cve_id": "CVE-2021-38295",
+   "cwe": "CWE-269",
+   "product": "couchdb",
+   "severity": "HIGH",
+   "title": "Privilege escalation via cluster API"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<3.2.2",
+   "cve_id": "CVE-2022-24706",
+   "cwe": "CWE-1188",
+   "product": "couchdb",
+   "severity": "CRITICAL",
+   "title": "Default Erlang cookie RCE via cluster protocol"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.11.5",
+   "cve_id": "CVE-2017-12794",
+   "cwe": "CWE-79",
+   "product": "django",
+   "severity": "MEDIUM",
+   "title": "Debug page XSS via invalid URL parameter"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2016.74",
+   "cve_id": "CVE-2016-7406",
+   "cwe": "CWE-134",
+   "product": "dropbear",
+   "severity": "CRITICAL",
+   "title": "Format string in message printout (server: root code execution when usernames containing % exist; also dbclient)"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2018.76",
+   "cve_id": "CVE-2018-15599",
+   "cwe": "CWE-203",
+   "product": "dropbear",
+   "severity": "MEDIUM",
+   "title": "Username enumeration via response size"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.32",
+   "cve_id": "CVE-2014-3704",
+   "cwe": "CWE-89",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "SQL injection via expand_arguments()"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.58",
+   "cve_id": "CVE-2018-7600",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon2: RCE via Form API"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.0.0,<8.3.9",
+   "cve_id": "CVE-2018-7600",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon2: RCE via Form API"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.4.0,<8.4.6",
+   "cve_id": "CVE-2018-7600",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon2: RCE via Form API"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.5.0,<8.5.1",
+   "cve_id": "CVE-2018-7600",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon2: RCE via Form API"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.59",
+   "cve_id": "CVE-2018-7602",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon3: RCE via Contextual links"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.0.0,<8.4.8",
+   "cve_id": "CVE-2018-7602",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon3: RCE via Contextual links"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.5.0,<8.5.3",
+   "cve_id": "CVE-2018-7602",
+   "cwe": "CWE-20",
+   "product": "drupal",
+   "severity": "CRITICAL",
+   "title": "Drupalgeddon3: RCE via Contextual links"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.2",
+   "cve_id": "CVE-2014-3120",
+   "cwe": "CWE-94",
+   "product": "elasticsearch",
+   "severity": "HIGH",
+   "title": "MVEL scripting RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.4.3",
+   "cve_id": "CVE-2015-1427",
+   "cwe": "CWE-94",
+   "product": "elasticsearch",
+   "severity": "CRITICAL",
+   "title": "Groovy sandbox escape RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.4.5",
+   "cve_id": "CVE-2015-3337",
+   "cwe": "CWE-22",
+   "product": "elasticsearch",
+   "severity": "HIGH",
+   "title": "Directory traversal via site plugin"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<6.4.3",
+   "cve_id": "CVE-2018-17244",
+   "cwe": "CWE-287",
+   "product": "elasticsearch",
+   "severity": "MEDIUM",
+   "title": "Security bypass in token generation"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.17.19",
+   "cve_id": "CVE-2024-23450",
+   "cwe": "CWE-400",
+   "product": "elasticsearch",
+   "severity": "HIGH",
+   "title": "Ingest pipeline DoS via deep nesting"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.15.3.12",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=17,<25.3.2.20",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=26,<26.2.5.11",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=27,<27.3.3",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.0,<5.1.4.8",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.2,<5.2.10",
+   "cve_id": "CVE-2025-32433",
+   "cwe": "CWE-306",
+   "product": "erlang_ssh",
+   "severity": "CRITICAL",
+   "title": "Pre-auth RCE via SSH protocol message sequence"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.70",
+   "cve_id": "CVE-2010-4344",
+   "cwe": "CWE-787",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "string_vformat heap overflow via crafted SMTP session"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=4.72",
+   "cve_id": "CVE-2010-4345",
+   "cwe": "CWE-77",
+   "product": "exim",
+   "severity": "HIGH",
+   "title": "Local privilege escalation via alternate configuration file"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.90.1",
+   "cve_id": "CVE-2018-6789",
+   "cwe": "CWE-120",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "base64d buffer overflow in SMTP listener"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.87,<=4.91",
+   "cve_id": "CVE-2019-10149",
+   "cwe": "CWE-78",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "Remote command execution via recipient address in deliver_message()"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.92,<=4.92.2",
+   "cve_id": "CVE-2019-16928",
+   "cwe": "CWE-787",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "string_vformat heap overflow via long EHLO command"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.94.2",
+   "cve_id": "CVE-2021-27216",
+   "cwe": "CWE-59",
+   "product": "exim",
+   "severity": "MEDIUM",
+   "title": "Privilege escalation via symlink attack"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.96.1",
+   "cve_id": "CVE-2023-42114",
+   "cwe": "CWE-125",
+   "product": "exim",
+   "severity": "MEDIUM",
+   "title": "NTLM challenge out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.96.1",
+   "cve_id": "CVE-2023-42115",
+   "cwe": "CWE-787",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "AUTH out-of-bounds write"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.96.1",
+   "cve_id": "CVE-2023-42116",
+   "cwe": "CWE-121",
+   "product": "exim",
+   "severity": "CRITICAL",
+   "title": "NTLM challenge stack buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.98",
+   "cve_id": "CVE-2024-39929",
+   "cwe": "CWE-20",
+   "product": "exim",
+   "severity": "MEDIUM",
+   "title": "RFC 2231 header parsing bypass \u2014 malware delivery"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.7.6",
+   "cve_id": "CVE-2019-20933",
+   "cwe": "CWE-287",
+   "product": "influxdb",
+   "severity": "CRITICAL",
+   "title": "JWT auth bypass via empty shared secret"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.0,<7.0",
+   "cve_id": "CVE-2017-12149",
+   "cwe": "CWE-502",
+   "product": "jboss",
+   "severity": "CRITICAL",
+   "title": "Java deserialization RCE via /invoker/readonly"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<5.0",
+   "cve_id": "CVE-2017-7504",
+   "cwe": "CWE-502",
+   "product": "jboss",
+   "severity": "CRITICAL",
+   "title": "JbossMQ HTTP invocation layer deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.4.0,<9.4.52",
+   "cve_id": "CVE-2023-26048",
+   "cwe": "CWE-400",
+   "product": "jetty",
+   "severity": "MEDIUM",
+   "title": "Request large content denial-of-service via multipart"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.4.0,<9.4.52",
+   "cve_id": "CVE-2023-26049",
+   "cwe": "CWE-200",
+   "product": "jetty",
+   "severity": "MEDIUM",
+   "title": "Cookie parsing allows exfiltration of HttpOnly cookies"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.4.0,<9.4.54",
+   "cve_id": "CVE-2023-36478",
+   "cwe": "CWE-190",
+   "product": "jetty",
+   "severity": "HIGH",
+   "title": "HTTP/2 HPACK integer overflow leads to buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.4.0,<9.4.51",
+   "cve_id": "CVE-2023-40167",
+   "cwe": "CWE-444",
+   "product": "jetty",
+   "severity": "MEDIUM",
+   "title": "HTTP request smuggling via invalid Transfer-Encoding"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.0.0,<4.2.8",
+   "cve_id": "CVE-2023-23752",
+   "cwe": "CWE-284",
+   "product": "joomla",
+   "severity": "MEDIUM",
+   "title": "Unauthenticated information disclosure via REST API"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<2.5.2",
+   "cve_id": "CVE-2021-3129",
+   "cwe": "CWE-94",
+   "product": "laravel_ignition",
+   "severity": "CRITICAL",
+   "title": "Ignition debug mode RCE via file_put_contents"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<0.7.6",
+   "cve_id": "CVE-2018-10933",
+   "cwe": "CWE-287",
+   "product": "libssh",
+   "severity": "CRITICAL",
+   "title": "Authentication bypass via MSG_USERAUTH_SUCCESS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.8.0,<0.8.4",
+   "cve_id": "CVE-2018-10933",
+   "cwe": "CWE-287",
+   "product": "libssh",
+   "severity": "CRITICAL",
+   "title": "Authentication bypass via MSG_USERAUTH_SUCCESS"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<0.9.13",
+   "cve_id": "CVE-2019-20788",
+   "cwe": "CWE-190",
+   "product": "libvncserver",
+   "severity": "CRITICAL",
+   "title": "HandleCursorShape integer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.1,<5.1.62",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mariadb",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.2,<5.2.12",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mariadb",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.3,<5.3.6",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mariadb",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.23",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mariadb",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.4.33",
+   "cve_id": "CVE-2016-8704",
+   "cwe": "CWE-190",
+   "product": "memcached",
+   "severity": "CRITICAL",
+   "title": "process_bin_append integer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.4.33",
+   "cve_id": "CVE-2016-8705",
+   "cwe": "CWE-190",
+   "product": "memcached",
+   "severity": "CRITICAL",
+   "title": "process_bin_update integer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.4.33",
+   "cve_id": "CVE-2016-8706",
+   "cwe": "CWE-190",
+   "product": "memcached",
+   "severity": "HIGH",
+   "title": "SASL auth integer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.0.0,<5.0.14",
+   "cve_id": "CVE-2024-8207",
+   "cwe": "CWE-284",
+   "product": "mongodb",
+   "severity": "MEDIUM",
+   "title": "Privilege escalation via untrusted library load"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.0.0,<6.0.3",
+   "cve_id": "CVE-2024-8207",
+   "cwe": "CWE-284",
+   "product": "mongodb",
+   "severity": "MEDIUM",
+   "title": "Privilege escalation via untrusted library load"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.1.0,<6.1.1",
+   "cve_id": "CVE-2024-8207",
+   "cwe": "CWE-284",
+   "product": "mongodb",
+   "severity": "MEDIUM",
+   "title": "Privilege escalation via untrusted library load"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.6.0,<4.4.30",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.0.0,<5.0.32",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.0.0,<6.0.27",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.0.28",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.0.0,<8.0.17",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.2.0,<8.2.3",
+   "cve_id": "CVE-2025-14847",
+   "cwe": "CWE-130",
+   "product": "mongodb",
+   "severity": "HIGH",
+   "title": "MongoBleed: zlib header length mismatch discloses uninitialized heap memory"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.1,<5.1.63",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.24",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.6,<5.6.6",
+   "cve_id": "CVE-2012-2122",
+   "cwe": "CWE-287",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "Authentication bypass via memcmp token comparison"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.52",
+   "cve_id": "CVE-2016-6662",
+   "cwe": "CWE-94",
+   "product": "mysql",
+   "severity": "CRITICAL",
+   "title": "Config file injection RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.6,<5.6.33",
+   "cve_id": "CVE-2016-6662",
+   "cwe": "CWE-94",
+   "product": "mysql",
+   "severity": "CRITICAL",
+   "title": "Config file injection RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.7,<5.7.15",
+   "cve_id": "CVE-2016-6662",
+   "cwe": "CWE-94",
+   "product": "mysql",
+   "severity": "CRITICAL",
+   "title": "Config file injection RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.52",
+   "cve_id": "CVE-2016-6664",
+   "cwe": "CWE-269",
+   "product": "mysql",
+   "severity": "HIGH",
+   "title": "Privilege escalation via mysqld_safe"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.0,<8.0.23",
+   "cve_id": "CVE-2021-2022",
+   "cwe": "CWE-787",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "InnoDB buffer pool corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.0.0,<=8.0.35",
+   "cve_id": "CVE-2024-20973",
+   "cwe": "CWE-404",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "Optimizer DoS via low-privilege network attack"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.1.0,<=8.2.0",
+   "cve_id": "CVE-2024-20973",
+   "cwe": "CWE-404",
+   "product": "mysql",
+   "severity": "MEDIUM",
+   "title": "Optimizer DoS via low-privilege network attack"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.5.7",
+   "cve_id": "CVE-2013-4547",
+   "cwe": "CWE-20",
+   "product": "nginx",
+   "severity": "HIGH",
+   "title": "URI processing security bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.17.7",
+   "cve_id": "CVE-2019-20372",
+   "cwe": "CWE-444",
+   "product": "nginx",
+   "severity": "MEDIUM",
+   "title": "HTTP request smuggling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.25.0,<1.25.4",
+   "cve_id": "CVE-2024-24989",
+   "cwe": "CWE-476",
+   "product": "nginx",
+   "severity": "HIGH",
+   "title": "HTTP/3 QUIC null pointer crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.25.0,<1.25.4",
+   "cve_id": "CVE-2024-24990",
+   "cwe": "CWE-416",
+   "product": "nginx",
+   "severity": "HIGH",
+   "title": "HTTP/3 use-after-free crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<6.6.2",
+   "cve_id": "CVE-2020-7247",
+   "cwe": "CWE-78",
+   "product": "opensmtpd",
+   "severity": "CRITICAL",
+   "title": "RCE via crafted MAIL FROM command"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<6.6.4",
+   "cve_id": "CVE-2020-8794",
+   "cwe": "CWE-125",
+   "product": "opensmtpd",
+   "severity": "CRITICAL",
+   "title": "Out-of-bounds read in MTA bounce handling"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.0,<3.1",
+   "cve_id": "CVE-2002-0083",
+   "cwe": "CWE-193",
+   "product": "openssh",
+   "severity": "CRITICAL",
+   "title": "Channel code off-by-one memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.9.9,<=3.3",
+   "cve_id": "CVE-2002-0639",
+   "cwe": "CWE-190",
+   "product": "openssh",
+   "severity": "CRITICAL",
+   "title": "sshd integer overflow pre-auth RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=4.4",
+   "cve_id": "CVE-2006-5051",
+   "cwe": "CWE-415",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Signal handler race condition"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=7.2",
+   "cve_id": "CVE-2015-8325",
+   "cwe": "CWE-264",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "UseLogin environment privilege issue"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=5.4,<=7.1",
+   "cve_id": "CVE-2016-0778",
+   "cwe": "CWE-119",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Roaming client memory disclosure"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<=7.3",
+   "cve_id": "CVE-2016-10009",
+   "cwe": "CWE-426",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "ssh-agent untrusted search path"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=7.3",
+   "cve_id": "CVE-2016-10010",
+   "cwe": "CWE-264",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Privilege separation disabled socket issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=7.3",
+   "cve_id": "CVE-2016-10012",
+   "cwe": "CWE-119",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Pre-auth compression shared memory bounds issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<7.4",
+   "cve_id": "CVE-2016-10708",
+   "cwe": "CWE-476",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "NULL pointer DoS"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<7.2",
+   "cve_id": "CVE-2016-1908",
+   "cwe": "CWE-287",
+   "product": "openssh",
+   "severity": "CRITICAL",
+   "title": "Untrusted X11 forwarding cookie generation flaw"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<7.0",
+   "cve_id": "CVE-2016-6210",
+   "cwe": "CWE-200",
+   "product": "openssh",
+   "severity": "MEDIUM",
+   "title": "User enumeration via timing"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=7.2",
+   "cve_id": "CVE-2016-6515",
+   "cwe": "CWE-20",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Password auth DoS via long passwords"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.8,<=7.3",
+   "cve_id": "CVE-2016-8858",
+   "cwe": "CWE-399",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "kex_input_kexinit memory exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<7.6",
+   "cve_id": "CVE-2017-15906",
+   "cwe": "CWE-732",
+   "product": "openssh",
+   "severity": "MEDIUM",
+   "title": "Improper write restriction in readonly mode"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.7,<=7.9",
+   "cve_id": "CVE-2019-16905",
+   "cwe": "CWE-190",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "XMSS key parsing integer overflow"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<8.1",
+   "cve_id": "CVE-2019-6111",
+   "cwe": "CWE-20",
+   "product": "openssh",
+   "severity": "MEDIUM",
+   "title": "SCP client-side file overwrite"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=8.2,<8.3",
+   "cve_id": "CVE-2020-12062",
+   "cwe": "CWE-20",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "scp duplicate response mishandling"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<8.3",
+   "cve_id": "CVE-2020-15778",
+   "cwe": "CWE-78",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "scp command injection"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=8.2,<8.5",
+   "cve_id": "CVE-2021-28041",
+   "cwe": "CWE-415",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "ssh-agent double free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.2,<8.8",
+   "cve_id": "CVE-2021-41617",
+   "cwe": "CWE-20",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "Supplemental groups not initialized"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=8.9,<9.3",
+   "cve_id": "CVE-2023-28531",
+   "cwe": "CWE-20",
+   "product": "openssh",
+   "severity": "CRITICAL",
+   "title": "ssh-add destination constraint bypass"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<9.3",
+   "cve_id": "CVE-2023-38408",
+   "cwe": "CWE-428",
+   "product": "openssh",
+   "severity": "CRITICAL",
+   "title": "ssh-agent PKCS#11 search path code execution"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.4",
+   "cve_id": "CVE-2024-6387",
+   "cwe": "CWE-362",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "regreSSHion: signal handler race RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.5,<9.8",
+   "cve_id": "CVE-2024-6387",
+   "cwe": "CWE-362",
+   "product": "openssh",
+   "severity": "HIGH",
+   "title": "regreSSHion: signal handler race RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=6.8,<9.9.2",
+   "cve_id": "CVE-2025-26465",
+   "cwe": "CWE-305",
+   "product": "openssh",
+   "severity": "MEDIUM",
+   "title": "MitM via VerifyHostKeyDNS bypass"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.9.6,<0.9.6a",
+   "cve_id": "CVE-2003-0545",
+   "cwe": "CWE-415",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "ASN.1 parser double free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.9.7,<0.9.7a",
+   "cve_id": "CVE-2003-0545",
+   "cwe": "CWE-415",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "ASN.1 parser double free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.9.6c,<0.9.6l",
+   "cve_id": "CVE-2004-0079",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "ChangeCipherSpec NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.9.7a,<0.9.7d",
+   "cve_id": "CVE-2004-0079",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "ChangeCipherSpec NULL pointer dereference"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<0.9.8",
+   "cve_id": "CVE-2005-2946",
+   "cwe": "CWE-327",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Weak default MD5 message digest"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=0.9.8c,<=0.9.8g",
+   "cve_id": "CVE-2008-0166",
+   "cwe": "CWE-338",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Debian predictable random number generator"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1g",
+   "cve_id": "CVE-2014-0160",
+   "cwe": "CWE-125",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Heartbleed TLS heartbeat information disclosure"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<0.9.8za",
+   "cve_id": "CVE-2014-0224",
+   "cwe": "CWE-326",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "ChangeCipherSpec injection MitM"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=0.9.8zf",
+   "cve_id": "CVE-2015-1789",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "X509_cmp_time memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2e",
+   "cve_id": "CVE-2015-3193",
+   "cwe": "CWE-200",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Montgomery squaring side-channel"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1q",
+   "cve_id": "CVE-2015-3194",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "RSA PSS NULL pointer DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2e",
+   "cve_id": "CVE-2015-3194",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "RSA PSS NULL pointer DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1s",
+   "cve_id": "CVE-2016-0705",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "DSA private key double free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2g",
+   "cve_id": "CVE-2016-0705",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "DSA private key double free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1s",
+   "cve_id": "CVE-2016-0797",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "BIO integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2g",
+   "cve_id": "CVE-2016-0797",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "BIO integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1s",
+   "cve_id": "CVE-2016-0798",
+   "cwe": "CWE-399",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "SRP memory leak DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2g",
+   "cve_id": "CVE-2016-0798",
+   "cwe": "CWE-399",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "SRP memory leak DoS"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1s",
+   "cve_id": "CVE-2016-0799",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BIO printf memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2g",
+   "cve_id": "CVE-2016-0799",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BIO printf memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1t",
+   "cve_id": "CVE-2016-2105",
+   "cwe": "CWE-190",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "EVP_EncodeUpdate integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2h",
+   "cve_id": "CVE-2016-2105",
+   "cwe": "CWE-190",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "EVP_EncodeUpdate integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.0.1s",
+   "cve_id": "CVE-2016-2106",
+   "cwe": "CWE-189",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "EVP_EncryptUpdate integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.0.1n",
+   "cve_id": "CVE-2016-2108",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "ASN.1 BIO memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.0.1s",
+   "cve_id": "CVE-2016-2109",
+   "cwe": "CWE-399",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "ASN.1 BIO memory exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.0.1s",
+   "cve_id": "CVE-2016-2176",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "X509_NAME_oneline buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-2177",
+   "cwe": "CWE-190",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "Pointer arithmetic heap overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-2177",
+   "cwe": "CWE-190",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "Pointer arithmetic heap overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-2179",
+   "cwe": "CWE-399",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "DTLS queue memory exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-2179",
+   "cwe": "CWE-399",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "DTLS queue memory exhaustion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-2180",
+   "cwe": "CWE-125",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "TS_OBJ_print_bio out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-2180",
+   "cwe": "CWE-125",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "TS_OBJ_print_bio out-of-bounds read"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-2181",
+   "cwe": "CWE-189",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "DTLS anti-replay memory issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-2181",
+   "cwe": "CWE-189",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "DTLS anti-replay memory issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-2182",
+   "cwe": "CWE-787",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BN_bn2dec out-of-bounds write"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-2182",
+   "cwe": "CWE-787",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BN_bn2dec out-of-bounds write"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1a,<1.0.1u",
+   "cve_id": "CVE-2016-2183",
+   "cwe": "CWE-200",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "SWEET32 weak 3DES cipher exposure"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2a,<1.0.2i",
+   "cve_id": "CVE-2016-2183",
+   "cwe": "CWE-200",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "SWEET32 weak 3DES cipher exposure"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1s",
+   "cve_id": "CVE-2016-2842",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BIO print integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2g",
+   "cve_id": "CVE-2016-2842",
+   "cwe": "CWE-119",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "BIO print integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-6302",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "TLS ticket HMAC bounds issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-6302",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "TLS ticket HMAC bounds issue"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-6303",
+   "cwe": "CWE-787",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "MDC2_Update integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-6303",
+   "cwe": "CWE-787",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "MDC2_Update integer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.1,<1.0.1u",
+   "cve_id": "CVE-2016-6304",
+   "cwe": "CWE-401",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "OCSP status request memory leak"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2,<1.0.2i",
+   "cve_id": "CVE-2016-6304",
+   "cwe": "CWE-401",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "OCSP status request memory leak"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0,<1.1.0a",
+   "cve_id": "CVE-2016-6304",
+   "cwe": "CWE-401",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "OCSP status request memory leak"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0,<1.1.0a",
+   "cve_id": "CVE-2016-6305",
+   "cwe": "CWE-20",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Record layer denial of service"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0a,<1.1.0b",
+   "cve_id": "CVE-2016-6309",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "Message buffer use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.0.2i,<1.0.2j",
+   "cve_id": "CVE-2016-7052",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "Certificate validation NULL pointer crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0,<1.1.0c",
+   "cve_id": "CVE-2016-7053",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "CMS parser NULL pointer crash"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0,<1.1.0c",
+   "cve_id": "CVE-2016-7054",
+   "cwe": "CWE-284",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "ChaCha20-Poly1305 excessive data weakness"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.0.2x",
+   "cve_id": "CVE-2020-1971",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "MEDIUM",
+   "title": "NULL dereference in GENERAL_NAME_cmp"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.0,<1.1.1i",
+   "cve_id": "CVE-2020-1971",
+   "cwe": "CWE-476",
+   "product": "openssl",
+   "severity": "MEDIUM",
+   "title": "NULL dereference in GENERAL_NAME_cmp"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.1.1,<1.1.1l",
+   "cve_id": "CVE-2021-3711",
+   "cwe": "CWE-120",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SM2 decryption buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.0.4,<3.0.5",
+   "cve_id": "CVE-2022-2274",
+   "cwe": "CWE-787",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "RSA implementation memory corruption"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.0.0,<3.0.7",
+   "cve_id": "CVE-2022-3602",
+   "cwe": "CWE-120",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "X.509 email address buffer overflow"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.2.0,<3.2.4",
+   "cve_id": "CVE-2024-12797",
+   "cwe": "CWE-392",
+   "product": "openssl",
+   "severity": "HIGH",
+   "title": "RPK verification bypass enabling MitM"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.1.1y",
+   "cve_id": "CVE-2024-4741",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SSL_free_buffers use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.0.0,<3.0.14",
+   "cve_id": "CVE-2024-4741",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SSL_free_buffers use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.1.0,<3.1.6",
+   "cve_id": "CVE-2024-4741",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SSL_free_buffers use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.2.0,<3.2.2",
+   "cve_id": "CVE-2024-4741",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SSL_free_buffers use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.3.0,<3.3.1",
+   "cve_id": "CVE-2024-4741",
+   "cwe": "CWE-416",
+   "product": "openssl",
+   "severity": "CRITICAL",
+   "title": "SSL_free_buffers use-after-free"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<3.5.23",
+   "cve_id": "CVE-2023-51764",
+   "cwe": "CWE-345",
+   "product": "postfix",
+   "severity": "MEDIUM",
+   "title": "SMTP smuggling via pipelining"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<12.21",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=13.0,<13.17",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=14.0,<14.14",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=15.0,<15.9",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=16.0,<16.5",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=17.0,<17.1",
+   "cve_id": "CVE-2024-10976",
+   "cwe": "CWE-862",
+   "product": "postgresql",
+   "severity": "MEDIUM",
+   "title": "Row security policy bypass via role confusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<12.21",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=13.0,<13.17",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=14.0,<14.14",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=15.0,<15.9",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=16.0,<16.5",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=17.0,<17.1",
+   "cve_id": "CVE-2024-10979",
+   "cwe": "CWE-94",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "PL/Perl env variable manipulation to RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": "<13.19",
+   "cve_id": "CVE-2025-1094",
+   "cwe": "CWE-89",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "libpq quoting SQL injection leading to RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=14.0,<14.16",
+   "cve_id": "CVE-2025-1094",
+   "cwe": "CWE-89",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "libpq quoting SQL injection leading to RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=15.0,<15.11",
+   "cve_id": "CVE-2025-1094",
+   "cwe": "CWE-89",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "libpq quoting SQL injection leading to RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=16.0,<16.7",
+   "cve_id": "CVE-2025-1094",
+   "cwe": "CWE-89",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "libpq quoting SQL injection leading to RCE"
+  },
+  {
+   "client_side": 1,
+   "constraint": ">=17.0,<17.3",
+   "cve_id": "CVE-2025-1094",
+   "cwe": "CWE-89",
+   "product": "postgresql",
+   "severity": "HIGH",
+   "title": "libpq quoting SQL injection leading to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=1.3.5,<1.3.5a",
+   "cve_id": "CVE-2015-3306",
+   "cwe": "CWE-284",
+   "product": "proftpd",
+   "severity": "CRITICAL",
+   "title": "mod_copy unauthenticated file copy via SITE CPFR/CPTO"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.3.6",
+   "cve_id": "CVE-2019-12815",
+   "cwe": "CWE-284",
+   "product": "proftpd",
+   "severity": "CRITICAL",
+   "title": "Arbitrary file copy via mod_copy"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<1.3.8",
+   "cve_id": "CVE-2024-48651",
+   "cwe": "CWE-269",
+   "product": "proftpd",
+   "severity": "HIGH",
+   "title": "Supplemental group inherits GID 0 (root group)"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.2,<5.0.13",
+   "cve_id": "CVE-2021-32761",
+   "cwe": "CWE-190",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "BITFIELD integer overflow (32-bit builds only)"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.0,<6.0.15",
+   "cve_id": "CVE-2021-32761",
+   "cwe": "CWE-190",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "BITFIELD integer overflow (32-bit builds only)"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.2,<6.2.5",
+   "cve_id": "CVE-2021-32761",
+   "cwe": "CWE-190",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "BITFIELD integer overflow (32-bit builds only)"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<6.2.7",
+   "cve_id": "CVE-2022-24735",
+   "cwe": "CWE-94",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "Lua sandbox escape via EVAL"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.0.5",
+   "cve_id": "CVE-2022-35951",
+   "cwe": "CWE-190",
+   "product": "redis",
+   "severity": "CRITICAL",
+   "title": "Integer overflow in XAUTOCLAIM"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.6,<6.2.16",
+   "cve_id": "CVE-2024-31449",
+   "cwe": "CWE-121",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "Lua bit library stack buffer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.2.6",
+   "cve_id": "CVE-2024-31449",
+   "cwe": "CWE-121",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "Lua bit library stack buffer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.3.0,<7.4.1",
+   "cve_id": "CVE-2024-31449",
+   "cwe": "CWE-121",
+   "product": "redis",
+   "severity": "HIGH",
+   "title": "Lua bit library stack buffer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<6.2.17",
+   "cve_id": "CVE-2024-46981",
+   "cwe": "CWE-416",
+   "product": "redis",
+   "severity": "CRITICAL",
+   "title": "Lua GC use-after-free RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.2.0,<7.2.7",
+   "cve_id": "CVE-2024-46981",
+   "cwe": "CWE-416",
+   "product": "redis",
+   "severity": "CRITICAL",
+   "title": "Lua GC use-after-free RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.4.0,<7.4.2",
+   "cve_id": "CVE-2024-46981",
+   "cwe": "CWE-416",
+   "product": "redis",
+   "severity": "CRITICAL",
+   "title": "Lua GC use-after-free RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.5.0,<4.6.4",
+   "cve_id": "CVE-2017-7494",
+   "cwe": "CWE-94",
+   "product": "samba",
+   "severity": "CRITICAL",
+   "title": "SambaCry \u2014 writable share RCE via shared library upload"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.13.17",
+   "cve_id": "CVE-2021-44142",
+   "cwe": "CWE-787",
+   "product": "samba",
+   "severity": "HIGH",
+   "title": "vfs_fruit heap overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.16.0,<4.17.12",
+   "cve_id": "CVE-2023-3961",
+   "cwe": "CWE-22",
+   "product": "samba",
+   "severity": "CRITICAL",
+   "title": "Pipe name validation bypass \u2014 root socket access"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.0.0,<3.1.7",
+   "cve_id": "CVE-2022-22963",
+   "cwe": "CWE-94",
+   "product": "spring_cloud_function",
+   "severity": "CRITICAL",
+   "title": "SpEL injection via routing header RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=3.2.0,<3.2.3",
+   "cve_id": "CVE-2022-22963",
+   "cwe": "CWE-94",
+   "product": "spring_cloud_function",
+   "severity": "CRITICAL",
+   "title": "SpEL injection via routing header RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.2.0,<5.2.20",
+   "cve_id": "CVE-2022-22965",
+   "cwe": "CWE-94",
+   "product": "spring_framework",
+   "severity": "CRITICAL",
+   "title": "Spring4Shell: ClassLoader manipulation RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.3.0,<5.3.18",
+   "cve_id": "CVE-2022-22965",
+   "cwe": "CWE-94",
+   "product": "spring_framework",
+   "severity": "CRITICAL",
+   "title": "Spring4Shell: ClassLoader manipulation RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.3.5,<2.3.32",
+   "cve_id": "CVE-2017-5638",
+   "cwe": "CWE-94",
+   "product": "struts2",
+   "severity": "CRITICAL",
+   "title": "S2-045: OGNL injection via Content-Type header RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.5.0,<2.5.10.1",
+   "cve_id": "CVE-2017-5638",
+   "cwe": "CWE-94",
+   "product": "struts2",
+   "severity": "CRITICAL",
+   "title": "S2-045: OGNL injection via Content-Type header RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.3.5,<2.3.33",
+   "cve_id": "CVE-2017-9805",
+   "cwe": "CWE-502",
+   "product": "struts2",
+   "severity": "HIGH",
+   "title": "S2-052: XML deserialization RCE via REST plugin"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.5.0,<2.5.13",
+   "cve_id": "CVE-2017-9805",
+   "cwe": "CWE-502",
+   "product": "struts2",
+   "severity": "HIGH",
+   "title": "S2-052: XML deserialization RCE via REST plugin"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.0.0,<2.5.26",
+   "cve_id": "CVE-2020-17530",
+   "cwe": "CWE-94",
+   "product": "struts2",
+   "severity": "CRITICAL",
+   "title": "S2-061: Forced OGNL evaluation via tag attributes"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.3.10",
+   "cve_id": "CVE-2019-15678",
+   "cwe": "CWE-122",
+   "product": "tightvnc",
+   "severity": "CRITICAL",
+   "title": "rfbServerCutText heap buffer overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<=1.3.10",
+   "cve_id": "CVE-2019-15679",
+   "cwe": "CWE-122",
+   "product": "tightvnc",
+   "severity": "CRITICAL",
+   "title": "InitialiseRFBConnection heap overflow RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.0.81",
+   "cve_id": "CVE-2017-12615",
+   "cwe": "CWE-434",
+   "product": "tomcat",
+   "severity": "HIGH",
+   "title": "PUT method JSP file upload RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0.0,<7.0.100",
+   "cve_id": "CVE-2020-1938",
+   "cwe": "CWE-20",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Ghostcat: AJP connector file read/inclusion RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.5.0,<8.5.51",
+   "cve_id": "CVE-2020-1938",
+   "cwe": "CWE-20",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Ghostcat: AJP connector file read/inclusion RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.0.0,<9.0.31",
+   "cve_id": "CVE-2020-1938",
+   "cwe": "CWE-20",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Ghostcat: AJP connector file read/inclusion RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=10.1.0,<10.1.35",
+   "cve_id": "CVE-2025-24813",
+   "cwe": "CWE-502",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Partial PUT deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=11.0.0,<11.0.3",
+   "cve_id": "CVE-2025-24813",
+   "cwe": "CWE-502",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Partial PUT deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=8.5.0,<=8.5.100",
+   "cve_id": "CVE-2025-24813",
+   "cwe": "CWE-502",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Partial PUT deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=9.0.0,<9.0.99",
+   "cve_id": "CVE-2025-24813",
+   "cwe": "CWE-502",
+   "product": "tomcat",
+   "severity": "CRITICAL",
+   "title": "Partial PUT deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.3.4,<2.3.5",
+   "cve_id": "CVE-2011-2523",
+   "cwe": "CWE-506",
+   "product": "vsftpd",
+   "severity": "CRITICAL",
+   "title": "Backdoor command execution"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=10.3.6.0,<10.3.6.1",
+   "cve_id": "CVE-2017-10271",
+   "cwe": "CWE-502",
+   "product": "weblogic",
+   "severity": "HIGH",
+   "title": "XMLDecoder deserialization RCE via wls-wsat"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=12.1.3.0,<12.1.3.1",
+   "cve_id": "CVE-2017-10271",
+   "cwe": "CWE-502",
+   "product": "weblogic",
+   "severity": "HIGH",
+   "title": "XMLDecoder deserialization RCE via wls-wsat"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=10.3.6.0,<10.3.6.1",
+   "cve_id": "CVE-2020-14882",
+   "cwe": "CWE-306",
+   "product": "weblogic",
+   "severity": "CRITICAL",
+   "title": "Console unauthenticated takeover RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=12.1.3.0,<12.2.1.5",
+   "cve_id": "CVE-2020-14882",
+   "cwe": "CWE-306",
+   "product": "weblogic",
+   "severity": "CRITICAL",
+   "title": "Console unauthenticated takeover RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=14.1.1.0,<14.1.1.1",
+   "cve_id": "CVE-2020-14882",
+   "cwe": "CWE-306",
+   "product": "weblogic",
+   "severity": "CRITICAL",
+   "title": "Console unauthenticated takeover RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=12.2.1.3,<12.2.1.5",
+   "cve_id": "CVE-2023-21839",
+   "cwe": "CWE-502",
+   "product": "weblogic",
+   "severity": "HIGH",
+   "title": "IIOP/T3 protocol deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=14.1.1.0,<14.1.2",
+   "cve_id": "CVE-2023-21839",
+   "cwe": "CWE-502",
+   "product": "weblogic",
+   "severity": "HIGH",
+   "title": "IIOP/T3 protocol deserialization RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.7.1",
+   "cve_id": "CVE-2016-10033",
+   "cwe": "CWE-78",
+   "product": "wordpress",
+   "severity": "CRITICAL",
+   "title": "PHPMailer RCE via wp_mail()"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.7.0,<4.7.2",
+   "cve_id": "CVE-2017-1001000",
+   "cwe": "CWE-284",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "REST API content injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.7.4",
+   "cve_id": "CVE-2017-8295",
+   "cwe": "CWE-640",
+   "product": "wordpress",
+   "severity": "MEDIUM",
+   "title": "Host header password reset hijack"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.7,<4.7.39",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.8,<4.8.34",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.9,<4.9.35",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.0,<5.0.31",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.1,<5.1.28",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.2,<5.2.30",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.3,<5.3.27",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.4,<5.4.25",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.24",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.6,<5.6.23",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.7,<5.7.21",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.8,<5.8.19",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.9,<5.9.20",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.0,<6.0.18",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.1,<6.1.16",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.2,<6.2.15",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.3,<6.3.14",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.4,<6.4.14",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.5,<6.5.14",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.6,<6.6.11",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.7,<6.7.11",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.8,<6.8.12",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.9,<6.9.11",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.0.8",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.1,<7.1.4",
+   "cve_id": "CVE-2026-119977",
+   "cwe": "CWE-367",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "Predictable core upgrade staging path leads to RCE"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.8,<6.8.6",
+   "cve_id": "CVE-2026-60137",
+   "cwe": "CWE-89",
+   "product": "wordpress",
+   "severity": "MEDIUM",
+   "title": "WP_Query author__not_in SQL injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.9,<6.9.5",
+   "cve_id": "CVE-2026-60137",
+   "cwe": "CWE-89",
+   "product": "wordpress",
+   "severity": "MEDIUM",
+   "title": "WP_Query author__not_in SQL injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.0.2",
+   "cve_id": "CVE-2026-60137",
+   "cwe": "CWE-89",
+   "product": "wordpress",
+   "severity": "MEDIUM",
+   "title": "WP_Query author__not_in SQL injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.9,<6.9.5",
+   "cve_id": "CVE-2026-63030",
+   "cwe": "CWE-436",
+   "product": "wordpress",
+   "severity": "CRITICAL",
+   "title": "REST API batch route confusion chained with WP_Query SQL injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.0.2",
+   "cve_id": "CVE-2026-63030",
+   "cwe": "CWE-436",
+   "product": "wordpress",
+   "severity": "CRITICAL",
+   "title": "REST API batch route confusion chained with WP_Query SQL injection"
+  },
+  {
+   "client_side": 0,
+   "constraint": "<4.7.37",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.8,<4.8.32",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=4.9,<4.9.33",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.0,<5.0.29",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.1,<5.1.26",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.2,<5.2.28",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.3,<5.3.25",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.4,<5.4.23",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.5,<5.5.22",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.6,<5.6.21",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.7,<5.7.19",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.8,<5.8.17",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=5.9,<5.9.18",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.0,<6.0.16",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.1,<6.1.14",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.2,<6.2.13",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.3,<6.3.12",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.4,<6.4.12",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.5,<6.5.12",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.6,<6.6.9",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.7,<6.7.9",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.8,<6.8.10",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=6.9,<6.9.9",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.0,<7.0.6",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=7.1,<7.1.2",
+   "cve_id": "CVE-2026-87902",
+   "cwe": "CWE-98",
+   "product": "wordpress",
+   "severity": "HIGH",
+   "title": "get_page_template local PHP file inclusion"
+  }
+ ],
+ "source_commit": "3205d18"
+}
