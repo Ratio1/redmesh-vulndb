@@ -1,5 +1,5 @@
 {
- "source_commit": "f763995",
+ "source_commit": "6bd9d71",
  "cases": [
   {
    "product": "",
@@ -238,6 +238,34 @@
    "constraint": "<1.2.3",
    "expected": true,
    "why": "end anchor: .M1 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-preview",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -preview is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-prerelease",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -prerelease is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-preview2",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -preview2 is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-previews",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -previews ends in more letters: a release"
   }
  ]
 }
