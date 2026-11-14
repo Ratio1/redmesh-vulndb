@@ -18,6 +18,11 @@
 # `cockpit-hq` / `agentejo:cockpit` is Cockpit CMS, a different product. NGINX Plus, MySQL Cluster,
 # Oracle HTTP Server and Tomcat Native are excluded (owner, 2026-11-14).
 
+# rules.component_products: a CVE of such a product (OpenSSL) is not carried to other products' NVD rows,
+# since a server banner does not say which OpenSSL it bundles. Curated pairs and KEV CVEs are kept.
+[rules]
+component_products = ["openssl"]
+
 [products.apache]
 nvd = ["apache:http_server"]
 cna = [["apache software foundation", "apache http server"], ["apache", "apache http server"]]
