@@ -23,6 +23,12 @@
 [rules]
 component_products = ["openssl"]
 
+# supersede.pairs: (product, CVE) whose curated rows are partial. The generated rows replace them when the
+# feed has any row for the pair, else the curated rows stay. The overlay file is unchanged.
+[supersede]
+pairs = [["apache", "CVE-2017-9798"], ["openssh", "CVE-2016-6210"], ["mysql", "CVE-2016-6664"], ["jetty", "CVE-2023-36478"],
+         ["samba", "CVE-2023-3961"], ["postfix", "CVE-2023-51764"], ["elasticsearch", "CVE-2024-23450"]]
+
 [products.apache]
 nvd = ["apache:http_server"]
 cna = [["apache software foundation", "apache http server"], ["apache", "apache http server"]]

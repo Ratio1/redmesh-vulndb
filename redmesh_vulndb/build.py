@@ -101,7 +101,8 @@ def load_config(root):
   eol = {k: v["oldest_supported"] for k, v in tomllib.loads((root / "eol.toml").read_text()).items()}
   files = {n: sha256_bytes((root / n).read_bytes()) for n in ("product_map.toml", "overlay/curated.json", "eol.toml")}
   rules = {"component_products": frozenset(pmap.get("rules", {}).get("component_products", []))}
-  return {"products": pm, "rules": rules, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files}
+  supersede = {tuple(p) for p in pmap.get("supersede", {}).get("pairs", [])}
+  return {"products": pm, "rules": rules, "supersede": supersede, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files}
 
 
 def load_kev(path):
@@ -183,9 +184,14 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
         add(prod, cve, cons, "cna", "tentative", "cna_range")
   curated = {(r["product"], r["cve_id"]) for r in overlay_rows}
   drop_component_rows(affected, curated, kev, cfg["rules"]["component_products"], stats)
-  for key in [k for k in affected if (k[0], k[1]) in curated]:
+  generated = {(k[0], k[1]) for k in affected}
+  superseded = cfg["supersede"] & generated  # partial curated rows: the feed's full ranges win when the feed has any
+  stats["curated_superseded"] = len(superseded)
+  for key in [k for k in affected if (k[0], k[1]) in curated - superseded]:
     del affected[key]
   for r in overlay_rows:
+    if (r["product"], r["cve_id"]) in superseded:
+      continue
     add(r["product"], r["cve_id"], r["constraint"], "curated", "firm", "curated", 0, r["client_side"])
   client_cves = {r["cve_id"] for r in overlay_rows if r["client_side"]}
   for (prod, cve, cons), row in affected.items():
