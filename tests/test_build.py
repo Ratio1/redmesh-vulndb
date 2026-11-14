@@ -136,3 +136,31 @@ def test_component_cve_rule_drops_other_products_nvd_rows():
   build.drop_component_rows(affected, {("mariadb", "CVE-1")}, {"CVE-2": "2024-01-01"}, frozenset({"openssl"}), stats)
   assert stats["component_cve_dropped"] == 1
   assert ("mysql", "CVE-1", "<5.7.36") not in affected and len(affected) == 6
+
+
+def test_supersede_pairs_listed_in_product_map():
+  import tomllib
+  pairs = tomllib.loads((ROOT / "product_map.toml").read_text())["supersede"]["pairs"]
+  assert len(pairs) == 7 and ["apache", "CVE-2017-9798"] in pairs
+
+
+def test_supersede_pair_keeps_generated_rows_else_curated(root_copy, tmp_path):
+  """With a feed row for the pair the curated row is replaced; a supersede pair without feed rows stays curated."""
+  pm = root_copy / "product_map.toml"
+  data = json.loads((root_copy / "overlay/curated.json").read_text())
+  rows = [r for r in data["rows"] if r["cve_id"] == "CVE-2021-41773"]
+  assert rows and all(r["product"] == "apache" for r in rows)
+  first = tmp_path / "a.sqlite"
+  build.build(FIXTURE_CACHE, first, root=root_copy, log=lambda *_: None)
+  assert sqlite3.connect(first).execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='curated'").fetchone()[0] > 0
+  pm.write_text(pm.read_text().replace('pairs = [', 'pairs = [["apache", "CVE-2021-41773"], ["apache", "CVE-9999-0001"], ', 1))
+  data["rows"].append({"product": "apache", "constraint": "<2.4.1", "cve_id": "CVE-9999-0001", "severity": "HIGH",
+                       "title": "no feed row", "cwe": "", "client_side": 0})
+  data["row_count"] = len(data["rows"])
+  (root_copy / "overlay/curated.json").write_text(json.dumps(data))
+  second = tmp_path / "b.sqlite"
+  build.build(FIXTURE_CACHE, second, root=root_copy, log=lambda *_: None)
+  con = sqlite3.connect(second)
+  assert con.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='curated'").fetchone()[0] == 0
+  assert con.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2021-41773' AND source='nvd'").fetchone()[0] > 0
+  assert con.execute("SELECT source FROM affected WHERE cve_id='CVE-9999-0001'").fetchall() == [("curated",)]
