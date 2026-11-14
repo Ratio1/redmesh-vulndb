@@ -121,3 +121,13 @@ def test_cli_fetch_manifest_only(tmp_path):
   (cache / "manifest.json").unlink()
   assert cli.main(["fetch", "--cache", str(cache), "--manifest-only"]) == 0
   assert (cache / "manifest.json").exists()
+
+
+def test_lost_gate_excuses_component_drops_only(built):
+  base = diff.baseline_pairs(built[0]) | {("mysql", "CVE-2021-3711"), ("nginx", "CVE-2099-1234")}
+  run = lambda ex: diff.run_gates(built[0], ROOT, baseline=base, excused=ex)["lost_cves"]  # noqa: E731
+  assert run([])["ok"] is False
+  res = run([["mysql", "CVE-2021-3711"]])
+  assert res["ok"] is False and res["detail"]["unlisted"] == [["nginx", "CVE-2099-1234"]]  # the unexplained loss still fails
+  res = run([["mysql", "CVE-2021-3711"], ["nginx", "CVE-2099-1234"]])
+  assert res["ok"] is True and res["detail"]["excused"] == 2
