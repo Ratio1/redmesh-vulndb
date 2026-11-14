@@ -119,3 +119,20 @@ def test_matcher_reads_the_database(db):
   hit = [c for (c,) in db.execute("SELECT \"constraint\" FROM affected WHERE product='apache' AND cve_id='CVE-2021-41773'")]
   assert any(_matches_constraint("2.4.49", c, "apache") for c in hit)
   assert not any(_matches_constraint("2.4.51", c, "apache") for c in hit)
+
+
+def test_component_cve_rule_drops_other_products_nvd_rows():
+  row = lambda src: [src, "firm", "r", 0, 0]  # noqa: E731
+  affected = {
+    ("openssl", "CVE-1", "<1.1.1l"): row("nvd"),
+    ("mysql", "CVE-1", "<5.7.36"): row("nvd"),       # dropped
+    ("mariadb", "CVE-1", "<10.5"): row("nvd"),       # curated pair: kept
+    ("nginx", "CVE-1", "<1.2"): row("cna"),          # not NVD: kept
+    ("openssl", "CVE-2", "<1.0.2"): row("nvd"),
+    ("jboss", "CVE-2", "<7"): row("nvd"),            # KEV: kept
+    ("mysql", "CVE-3", "<5.7.1"): row("nvd"),        # no openssl row: kept
+  }
+  stats = build.Counter()
+  build.drop_component_rows(affected, {("mariadb", "CVE-1")}, {"CVE-2": "2024-01-01"}, frozenset({"openssl"}), stats)
+  assert stats["component_cve_dropped"] == 1
+  assert ("mysql", "CVE-1", "<5.7.36") not in affected and len(affected) == 6

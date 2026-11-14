@@ -87,7 +87,8 @@ def sha256_bytes(b):
 def load_config(root):
   """Product map, overlay and eol table from the repository data files."""
   root = Path(root)
-  pm = tomllib.loads((root / "product_map.toml").read_text())["products"]
+  pmap = tomllib.loads((root / "product_map.toml").read_text())
+  pm = pmap["products"]
   vp2prod, aliases = {}, {}
   for prod, spec in pm.items():
     for name in spec.get("nvd", []):
@@ -99,7 +100,8 @@ def load_config(root):
   overlay = json.loads((root / "overlay/curated.json").read_text())
   eol = {k: v["oldest_supported"] for k, v in tomllib.loads((root / "eol.toml").read_text()).items()}
   files = {n: sha256_bytes((root / n).read_bytes()) for n in ("product_map.toml", "overlay/curated.json", "eol.toml")}
-  return {"products": pm, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files}
+  rules = {"component_products": frozenset(pmap.get("rules", {}).get("component_products", []))}
+  return {"products": pm, "rules": rules, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files}
 
 
 def load_kev(path):
@@ -127,6 +129,17 @@ def display_cvss(rows):
       if (v, s) == (ver, src) and score is not None:
         return ver, score, src
   return None, None, None
+
+
+def drop_component_rows(affected, curated, kev, component_products, stats):
+  """Component-CVE rule: a CVE with an NVD row for a component product (openssl) loses its NVD rows for other products.
+
+  A server banner does not tell which OpenSSL the product bundles. Kept: curated pairs and KEV CVEs."""
+  comp_cves = {k[1] for k, row in affected.items() if row[0] == "nvd" and k[0] in component_products}
+  for key in [k for k, row in affected.items() if row[0] == "nvd" and k[1] in comp_cves and k[0] not in component_products
+              and (k[0], k[1]) not in curated and k[1] not in kev]:
+    del affected[key]
+    stats["component_cve_dropped"] += 1
 
 
 def assemble(cfg, cache, stats, baseline_cves=frozenset()):
@@ -169,6 +182,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
       else:
         add(prod, cve, cons, "cna", "tentative", "cna_range")
   curated = {(r["product"], r["cve_id"]) for r in overlay_rows}
+  drop_component_rows(affected, curated, kev, cfg["rules"]["component_products"], stats)
   for key in [k for k in affected if (k[0], k[1]) in curated]:
     del affected[key]
   for r in overlay_rows:
