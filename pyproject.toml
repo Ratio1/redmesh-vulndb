@@ -13,7 +13,7 @@ redmesh-vulndb = "redmesh_vulndb.cli:main"
 dev = ["pytest>=8"]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling==1.33.0"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]

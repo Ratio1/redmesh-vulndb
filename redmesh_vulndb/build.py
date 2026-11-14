@@ -129,8 +129,11 @@ def display_cvss(rows):
   return None, None, None
 
 
-def assemble(cfg, cache, stats):
-  """Run the ingest and apply the build rules. Returns (tables, extra meta)."""
+def assemble(cfg, cache, stats, baseline_cves=frozenset()):
+  """Run the ingest and apply the build rules. Returns (tables, extra meta).
+
+  `baseline_cves`: every CVE id of the previous build. One that a feed now rejects becomes a tombstone even
+  with no rows left, so it stays visible as REJECTED instead of silently vanishing."""
   manifest = fetch.verify(cache)
   inp = fetch.inputs(cache, fetch.selected(cache, manifest))  # exactly the files the manifest names
   vp2prod = cfg["vp2prod"]
@@ -138,7 +141,7 @@ def assemble(cfg, cache, stats):
   nrecs = nvd.ingest(inp["nvd"], vp2prod, overrides, stats)
   overlay_rows = cfg["overlay"]["rows"]
   kev, kev_version = load_kev(inp["kev"][-1])
-  wanted = set(nrecs) | {r["cve_id"] for r in overlay_rows}
+  wanted = set(nrecs) | {r["cve_id"] for r in overlay_rows} | set(baseline_cves)
   crecs = cvelist.ingest(inp["cvelist"][-1], cfg["aliases"], wanted, stats)
 
   affected = {}  # (product, cve, constraint) -> [source, confidence, reason, platform_dependent, client_side]
@@ -177,7 +180,7 @@ def assemble(cfg, cache, stats):
 
   rejected = {c for c, r in nrecs.items() if r["rejected"]} | {c for c, r in crecs.items() if r["state"] == "REJECTED"}
   with_rows = {k[1] for k in affected}
-  tombstones = rejected & with_rows
+  tombstones = rejected & (with_rows | set(baseline_cves))
   for key in [k for k in affected if k[1] in tombstones]:
     del affected[key]
   stats["tombstones"] = len(tombstones)
@@ -232,7 +235,8 @@ def assemble(cfg, cache, stats):
     "overlay_row_count": str(cfg["overlay"]["row_count"]),
   }
   build_id = "vulndb-" + sha256_bytes(json.dumps(
-    [__version__, SCHEMA_VERSION, MATCHER_REV, snapshot, cfg["files"], {k: v["sha256"] for k, v in manifest["inputs"].items()}],
+    [__version__, SCHEMA_VERSION, MATCHER_REV, snapshot, cfg["files"], {k: v["sha256"] for k, v in manifest["inputs"].items()},
+     sorted(tombstones)],
     sort_keys=True).encode())[:12]
   meta = {"schema": SCHEMA_VERSION, "build_id": build_id, "matcher_rev": MATCHER_REV, **snapshot}
   tables["meta"] = sorted(meta.items())
@@ -276,11 +280,11 @@ def content_hash(path):
   return h.hexdigest()
 
 
-def build(cache, out, root=ROOT, log=print):
+def build(cache, out, root=ROOT, log=print, baseline_cves=frozenset()):
   """Build `out` from `cache`. Returns the build record (also written to `<out>.build.json` by the CLI)."""
   stats = Counter()
   cfg = load_config(root)
-  tables, manifest = assemble(cfg, cache, stats)
+  tables, manifest = assemble(cfg, cache, stats, baseline_cves)
   write_db(out, tables)
   out = Path(out)
   record = {

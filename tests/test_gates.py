@@ -12,7 +12,7 @@ from .conftest import ROOT
 def test_all_gates_pass_on_fixture_build(built):
   res = diff.run_gates(built[0], ROOT)
   assert {k for k, v in res.items() if not v["ok"]} == set(), res
-  assert set(res) == {"integrity", "schema", "t1_recall", "t2_first_fixed", "t3_above_max", "t4_matcher", "lost_cves"}
+  assert set(res) == {"integrity", "schema", "t1_recall", "t2_first_fixed", "t3_above_max", "t4_matcher", "lost_cves", "size"}
 
 
 def test_t1_recall_and_regressions(db):

@@ -11,3 +11,8 @@ dist/
 *.sqlite
 *.sqlite.zst
 *.zst
+
+# Secrets are never committed
+.env
+.creds/
+credentials.*
