@@ -1,0 +1,3 @@
+# product<TAB>cve_id<TAB>reason. A (product, CVE) pair that was in the baseline (the curated overlay, or the
+# previous build) and is missing from a new build must be listed here with a reason, or the build fails.
+# `*` as product matches every product. A reason that starts with "open-ended" also excuses T3 for that pair.

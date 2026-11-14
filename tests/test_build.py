@@ -1,0 +1,121 @@
+import json
+import shutil
+import sqlite3
+
+import pytest
+
+from redmesh_vulndb import build, diff, fetch
+from redmesh_vulndb.versions import MATCHER_REV, _matches_constraint
+
+from .conftest import FIXTURE_CACHE, ROOT
+
+
+def test_schema_and_meta(built, db):
+  assert db.execute("PRAGMA user_version").fetchone()[0] == build.MODEL == 1
+  assert db.execute("PRAGMA page_size").fetchone()[0] == build.PAGE_SIZE
+  meta = dict(db.execute("SELECT k, v FROM meta"))
+  assert meta["schema"] == "1.0.0" and meta["matcher_rev"] == MATCHER_REV == "edge-node@3205d18"
+  assert meta["build_id"].startswith("vulndb-") and meta["epss_model_version"].startswith("v")
+  assert meta["snapshot_nvd_overrides"] == "7c9258bb6d2ebb371a3b55b20a608f64c0e73753"
+  assert [c[1] for c in db.execute("PRAGMA table_info(affected)")] == diff.expected_columns()["affected"]
+  assert db.execute("SELECT count(*) FROM eol").fetchone()[0] == 9
+  assert built[1]["counts"]["vuln"] == db.execute("SELECT count(*) FROM vuln").fetchone()[0]
+
+
+def test_every_emitted_row_is_valid_and_has_a_vuln(db):
+  assert db.execute("SELECT count(*) FROM affected WHERE cve_id NOT IN (SELECT cve_id FROM vuln)").fetchone()[0] == 0
+  from redmesh_vulndb.versions import validate_constraint
+  for product, cons in db.execute('SELECT product, "constraint" FROM affected'):
+    assert validate_constraint(cons, product), (product, cons)
+  assert db.execute("SELECT count(*) FROM vuln WHERE title=''").fetchone()[0] == 0
+
+
+def test_confidence_and_source_rules(db):
+  q = lambda s: db.execute(s).fetchall()  # noqa: E731
+  assert q("SELECT DISTINCT confidence FROM affected WHERE source='curated'") == [("firm",)]
+  assert q("SELECT DISTINCT confidence, reason FROM affected WHERE source='cna'") == [("tentative", "cna_range")]
+  assert ("tentative", "nvd_exact") in q("SELECT DISTINCT confidence, reason FROM affected WHERE source='nvd'")
+  assert ("firm", "nvd_range") in q("SELECT DISTINCT confidence, reason FROM affected WHERE source='nvd'")
+  assert q("SELECT count(*) FROM affected WHERE source='nvd' AND \"constraint\" NOT LIKE '%<%' AND \"constraint\" NOT LIKE '==%'") == [(0,)]
+
+
+def test_cna_rows_only_where_nvd_has_none(db):
+  assert db.execute("SELECT count(*) FROM affected WHERE source='cna'").fetchone()[0] > 0
+  for product, cve in db.execute("SELECT DISTINCT product, cve_id FROM affected WHERE source='cna'"):
+    assert db.execute("SELECT count(*) FROM affected WHERE product=? AND cve_id=? AND source!='cna'", (product, cve)).fetchone()[0] == 0
+
+
+def test_cna_only_cve_and_override_cve_present(db):
+  assert db.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2026-57200' AND source='cna'").fetchone()[0] > 0
+  assert db.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2023-52968' AND source='nvd'").fetchone()[0] > 0
+  assert db.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2022-0866' AND product='jboss' AND source!='curated'").fetchone()[0] == 0
+
+
+def test_kev_epss_cvss_and_title(db):
+  row = db.execute("SELECT kev, kev_date_added, epss, epss_percentile, display_cvss_version, display_cvss_score, "
+                   "display_cvss_source, title, published FROM vuln WHERE cve_id='CVE-2021-41773'").fetchone()
+  assert row[0] == 1 and row[1] and row[2] > 0.5 and 0 < row[3] <= 1
+  assert row[4] in ("3.1", "3.0", "4.0") and row[5] >= 7 and row[6] in ("cna", "nvd", "adp")
+  assert 0 < len(row[7]) <= 120 and len(row[8]) == 10
+  versions = {v for (v,) in db.execute("SELECT version FROM cvss WHERE cve_id='CVE-2021-41773'")}
+  assert "3.1" in versions
+
+
+def test_display_cvss_prefers_cna_v3():
+  rows = [("3.1", "v-nvd", 9.8, "nvd"), ("3.1", "v-cna", 7.5, "cna"), ("4.0", "v4", 9.0, "cna")]
+  assert build.display_cvss(rows) == ("3.1", 7.5, "cna")
+  assert build.display_cvss([("3.1", "v", 5.0, "adp"), ("2.0", "v2", 9.0, "nvd")]) == ("3.1", 5.0, "adp")
+  assert build.display_cvss([]) == (None, None, None)
+
+
+def test_rejected_cve_becomes_a_tombstone(root_copy, tmp_path):
+  data = json.loads((root_copy / "overlay/curated.json").read_text())
+  data["rows"].append({"product": "openssh", "constraint": "<9.9", "cve_id": "CVE-2024-7633", "severity": "HIGH",
+                       "title": "rejected test row", "cwe": "", "client_side": 0})
+  data["row_count"] = len(data["rows"])
+  (root_copy / "overlay/curated.json").write_text(json.dumps(data))
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=root_copy, log=lambda *_: None)
+  db = sqlite3.connect(out)
+  assert db.execute("SELECT state FROM vuln WHERE cve_id='CVE-2024-7633'").fetchone() == ("REJECTED",)
+  assert db.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2024-7633'").fetchone() == (0,)
+  # the lost-CVE gate sees it: the overlay pair is gone and not on the allow-list
+  res = diff.run_gates(out, root_copy)
+  assert res["lost_cves"]["ok"] is False and ["openssh", "CVE-2024-7633"] in res["lost_cves"]["detail"]["unlisted"]
+  with (root_copy / "allowlist/lost.tsv").open("a") as f:
+    f.write("openssh\tCVE-2024-7633\trejected by NVD\n")
+  assert diff.run_gates(out, root_copy)["lost_cves"]["ok"] is True
+
+
+def test_build_is_offline_and_verifies_hashes(tmp_path):
+  cache = tmp_path / "cache"
+  shutil.copytree(FIXTURE_CACHE, cache)
+  assert fetch.verify(cache)["inputs"]
+  victim = next((cache / "kev").glob("*.json"))
+  victim.write_text(victim.read_text() + " ")
+  with pytest.raises(ValueError, match="sha256 mismatch"):
+    build.build(cache, tmp_path / "x.sqlite", root=ROOT, log=lambda *_: None)
+  (cache / "epss/epss_scores-current.csv.gz").unlink()
+  with pytest.raises(FileNotFoundError):
+    fetch.verify(cache)
+
+
+def test_content_hash_is_over_rows_not_bytes(built, tmp_path):
+  out, record = built
+  assert build.content_hash(out) == record["content_hash"]
+  copy = tmp_path / "copy.sqlite"
+  con = sqlite3.connect(out)
+  con.execute("VACUUM INTO ?", (str(copy),))
+  con.close()
+  assert build.content_hash(copy) == record["content_hash"]
+  con = sqlite3.connect(copy)
+  con.execute("UPDATE vuln SET kev=1 - kev WHERE cve_id='CVE-2021-41773'")
+  con.commit()
+  con.close()
+  assert build.content_hash(copy) != record["content_hash"]
+
+
+def test_matcher_reads_the_database(db):
+  hit = [c for (c,) in db.execute("SELECT \"constraint\" FROM affected WHERE product='apache' AND cve_id='CVE-2021-41773'")]
+  assert any(_matches_constraint("2.4.49", c, "apache") for c in hit)
+  assert not any(_matches_constraint("2.4.51", c, "apache") for c in hit)
