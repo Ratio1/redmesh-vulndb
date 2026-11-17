@@ -6,6 +6,7 @@ the maximum bound gives 0 findings, T4 the matcher cases. The reader-latency gat
 import json
 import re
 import sqlite3
+import tomllib
 from collections import Counter
 from pathlib import Path
 
@@ -80,6 +81,9 @@ def diff_dbs(old_path, new_path):
   common = vo.keys() & vn.keys()
   meta = lambda db: dict(db.execute("SELECT k, v FROM meta"))  # noqa: E731
   mo, mn = meta(old), meta(new)
+  fix = lambda db: dict(Counter(f"{d}:{r}" for d, r in db.execute("SELECT distro, release FROM distro_fix"))) if db.execute(  # noqa: E731
+    "SELECT 1 FROM sqlite_master WHERE name='distro_fix'").fetchone() else {}  # a pre-1.0.1 build has no table
+  fo, fn = fix(old), fix(new)
   old.close()
   new.close()
   return {
@@ -87,6 +91,7 @@ def diff_dbs(old_path, new_path):
     "schema_changed": mo.get("schema") != mn.get("schema"),
     "pairs": {"old": len(po), "new": len(pn), "added": len(pn - po), "removed": len(po - pn)},
     "by_product": dict(sorted(by_product.items())),
+    "distro_fix": {k: [fo.get(k, 0), fn.get(k, 0)] for k in sorted(fo.keys() | fn.keys())},  # rows per distro:release, old and new
     "kev_added": sorted(c for c in common if vn[c][0] and not vo[c][0]) + sorted(c for c in vn.keys() - vo.keys() if vn[c][0]),
     "kev_removed": sorted(c for c in common if vo[c][0] and not vn[c][0]),
     "band_changes": sorted([c, band(vo[c][1]), band(vn[c][1])] for c in common if band(vo[c][1]) != band(vn[c][1])),
@@ -175,6 +180,19 @@ def gate_t3(db, allow=None):
   return {"ok": not bad, "detail": bad[:10]}
 
 
+def gate_distro(db, golden_facts, releases):
+  """distro_fix: every configured (distro, release) has rows, and every golden fact holds. Runs whenever distro_map.toml exists, so a cache without the sources fails it."""
+  empty = [f"{d}:{r}" for d, rels in releases.items() for r in rels
+           if not db.execute("SELECT 1 FROM distro_fix WHERE distro=? AND release=? LIMIT 1", (d, r)).fetchone()]
+  wrong = []
+  for g in golden_facts:
+    row = db.execute("SELECT status, fixed_version FROM distro_fix WHERE distro=? AND release=? AND package=? AND cve_id=?",
+                     (g["distro"], g["release"], g["package"], g["cve_id"])).fetchone()
+    if row != (g["status"], g.get("fixed_version")):
+      wrong.append([g["distro"], g["release"], g["package"], g["cve_id"], list(row) if row else None])
+  return {"ok": not empty and not wrong, "detail": {"empty_releases": empty, "golden_wrong": wrong, "golden": len(golden_facts)}}
+
+
 def gate_t4(golden):
   cases = json.loads((Path(golden) / "matcher_cases.json").read_text())["cases"]
   bad = [c for c in cases if _matches_constraint(c["version"], c["constraint"], c["product"]) != c["expected"]]
@@ -222,6 +240,7 @@ def run_gates(db_path, root, golden=None, baseline=None, limits=None, excused=()
   limits = {**LIMITS, **(limits or {})}
   root = Path(root)
   golden = golden or root / "tests/golden"
+  distro_map = tomllib.loads((root / "distro_map.toml").read_text()) if (root / "distro_map.toml").exists() else None
   allow = read_allowlist(root / "allowlist/lost.tsv")
   db = connect(db_path)
   out = {"integrity": gate_integrity(db), "schema": gate_schema(db)}
@@ -230,6 +249,8 @@ def run_gates(db_path, root, golden=None, baseline=None, limits=None, excused=()
     out["t2_first_fixed"] = gate_t2(db)
     out["t3_above_max"] = gate_t3(db, {(p, c): r for (p, c), r in allow.items() if r.startswith("open-ended")})
     out["t4_matcher"] = gate_t4(golden)
+    if distro_map:  # configured releases must have rows even when the cache lacks the sources
+      out["distro_fix"] = gate_distro(db, distro_map.get("golden", []), {d: distro_map[d]["releases"] for d in ("ubuntu", "debian")})
     now = pairs(db)
     lost = lost_pairs(baseline if baseline is not None else overlay_pairs(root), now, allow)
     tombstoned = 0

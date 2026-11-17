@@ -7,14 +7,14 @@ import pytest
 from redmesh_vulndb import build, diff, fetch
 from redmesh_vulndb.versions import MATCHER_REV, _matches_constraint
 
-from .conftest import FIXTURE_CACHE, ROOT
+from .conftest import FIXTURE_CACHE, PLAIN_ROOT, ROOT
 
 
 def test_schema_and_meta(built, db):
   assert db.execute("PRAGMA user_version").fetchone()[0] == build.MODEL == 1
   assert db.execute("PRAGMA page_size").fetchone()[0] == build.PAGE_SIZE
   meta = dict(db.execute("SELECT k, v FROM meta"))
-  assert meta["schema"] == "1.0.0" and meta["matcher_rev"] == MATCHER_REV == "edge-node@6bd9d71"
+  assert meta["schema"] == "1.0.1" and meta["matcher_rev"] == MATCHER_REV == "edge-node@6bd9d71"
   assert meta["build_id"].startswith("vulndb-") and meta["epss_model_version"].startswith("v")
   assert meta["snapshot_nvd_overrides"] == "7c9258bb6d2ebb371a3b55b20a608f64c0e73753"
   assert [c[1] for c in db.execute("PRAGMA table_info(affected)")] == diff.expected_columns()["affected"]
@@ -94,7 +94,7 @@ def test_build_is_offline_and_verifies_hashes(tmp_path):
   victim = next((cache / "kev").glob("*.json"))
   victim.write_text(victim.read_text() + " ")
   with pytest.raises(ValueError, match="sha256 mismatch"):
-    build.build(cache, tmp_path / "x.sqlite", root=ROOT, log=lambda *_: None)
+    build.build(cache, tmp_path / "x.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
   (cache / "epss/epss_scores-current.csv.gz").unlink()
   with pytest.raises(FileNotFoundError):
     fetch.verify(cache)

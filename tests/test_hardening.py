@@ -10,7 +10,7 @@ import pytest
 from redmesh_vulndb import build, cvelist, fetch, nvd
 from redmesh_vulndb.versions import validate_constraint
 
-from .conftest import FIXTURE_CACHE, ROOT
+from .conftest import FIXTURE_CACHE, PLAIN_ROOT, ROOT
 
 
 def _exact(prod, version, upd=""):
@@ -114,8 +114,8 @@ def _cache_with_two_overrides(tmp_path):
 def test_build_uses_only_the_manifest_selected_files(tmp_path):
   cache, old, new = _cache_with_two_overrides(tmp_path)
   assert fetch.selected(cache, json.loads((cache / "manifest.json").read_text()))["overrides"] == old
-  rec = build.build(cache, tmp_path / "a.sqlite", root=ROOT, log=lambda *_: None)
-  base = build.build(FIXTURE_CACHE, tmp_path / "b.sqlite", root=ROOT, log=lambda *_: None)
+  rec = build.build(cache, tmp_path / "a.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
+  base = build.build(FIXTURE_CACHE, tmp_path / "b.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
   assert rec["content_hash"] == base["content_hash"]
   with pytest.raises(ValueError, match="more than one"):
     (cache / "manifest.json").unlink()
@@ -184,9 +184,9 @@ def test_severity_overlay_else_band(db):
 
 
 def test_build_id_includes_package_version(tmp_path, monkeypatch):
-  a = build.build(FIXTURE_CACHE, tmp_path / "a.sqlite", root=ROOT, log=lambda *_: None)
+  a = build.build(FIXTURE_CACHE, tmp_path / "a.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
   monkeypatch.setattr(build, "__version__", "9.9.9")
-  b = build.build(FIXTURE_CACHE, tmp_path / "b.sqlite", root=ROOT, log=lambda *_: None)
+  b = build.build(FIXTURE_CACHE, tmp_path / "b.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
   assert a["build_id"] != b["build_id"]
 
 
@@ -206,7 +206,7 @@ def test_content_hash_covers_the_ddl(built, tmp_path):
 
 def test_cli_gate_baseline(built, capsys):
   from redmesh_vulndb import cli
-  assert cli.main(["gate", str(built[0]), "--baseline", str(built[0])]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "gate", str(built[0]), "--baseline", str(built[0])]) == 0
   capsys.readouterr()
 
 

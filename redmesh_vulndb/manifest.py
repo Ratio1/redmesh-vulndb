@@ -14,7 +14,7 @@ from . import fetch
 SCHEMA = 1
 # input folder -> the db `meta` key that names its snapshot
 SNAPSHOT_KEY = {"nvd": "snapshot_nvd", "cvelist": "snapshot_cvelist", "overrides": "snapshot_nvd_overrides",
-                "kev": "snapshot_kev", "epss": "snapshot_epss"}
+                "kev": "snapshot_kev", "epss": "snapshot_epss", "oval": "snapshot_oval", "debian": "snapshot_debian"}
 
 
 def grype_crosscheck(grype_db):

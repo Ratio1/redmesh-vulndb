@@ -7,7 +7,7 @@ import pytest
 
 from redmesh_vulndb import build, cli, diff, manifest
 
-from .conftest import FIXTURE_CACHE, ROOT
+from .conftest import FIXTURE_CACHE, PLAIN_ROOT, ROOT
 
 
 def copy_db(src, dst):
@@ -16,7 +16,7 @@ def copy_db(src, dst):
 
 
 def test_two_builds_from_the_same_inputs_are_identical(built, tmp_path):
-  again = build.build(FIXTURE_CACHE, tmp_path / "again.sqlite", root=ROOT, log=lambda *_: None)
+  again = build.build(FIXTURE_CACHE, tmp_path / "again.sqlite", root=PLAIN_ROOT, log=lambda *_: None)
   assert again["content_hash"] == built[1]["content_hash"] and again["sha256"] == built[1]["sha256"]
   assert again["build_id"] == built[1]["build_id"]
   assert b"built_at" not in (tmp_path / "again.sqlite").read_bytes()
@@ -39,33 +39,33 @@ def test_size_gate(built):
 
 
 def test_baseline_gates_run_only_with_a_baseline(built):
-  assert "row_delta" not in diff.run_gates(built[0], ROOT) and "size" in diff.run_gates(built[0], ROOT)
-  res = diff.run_gates(built[0], ROOT, baseline=diff.baseline_pairs(built[0]))
+  assert "row_delta" not in diff.run_gates(built[0], PLAIN_ROOT) and "size" in diff.run_gates(built[0], PLAIN_ROOT)
+  res = diff.run_gates(built[0], PLAIN_ROOT, baseline=diff.baseline_pairs(built[0]))
   assert res["row_delta"]["ok"] and res["lost_cves"]["ok"]
   limits = {"delta_pct": 0, "delta_floor": 0, "max_bytes": 32 * 2**20}
   fewer = {(p, c) for p, c in diff.baseline_pairs(built[0])} | {("apache", f"CVE-2099-{i}") for i in range(5)}
-  res = diff.run_gates(built[0], ROOT, baseline=fewer, limits=limits)
+  res = diff.run_gates(built[0], PLAIN_ROOT, baseline=fewer, limits=limits)
   assert not res["row_delta"]["ok"] and not res["lost_cves"]["ok"]
 
 
 def test_baseline_tombstone_for_a_cve_that_lost_all_rows(tmp_path):
   # CVE-2024-7633 is rejected in the fixture feed and has no rows; with the baseline it is a REJECTED vuln row
   plain = tmp_path / "plain.sqlite"
-  build.build(FIXTURE_CACHE, plain, root=ROOT, log=lambda *_: None)
+  build.build(FIXTURE_CACHE, plain, root=PLAIN_ROOT, log=lambda *_: None)
   assert sqlite3.connect(plain).execute("SELECT 1 FROM vuln WHERE cve_id='CVE-2024-7633'").fetchone() is None
   out = tmp_path / "tomb.sqlite"
-  rec = build.build(FIXTURE_CACHE, out, root=ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
+  rec = build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
   assert sqlite3.connect(out).execute("SELECT state FROM vuln WHERE cve_id='CVE-2024-7633'").fetchone() == ("REJECTED",)
   assert rec["stats"]["tombstones"] == 1 and rec["content_hash"] != build.content_hash(plain)
 
 
 def test_lost_gate_excuses_a_tombstone_only_with_a_baseline(tmp_path):
   out = tmp_path / "tomb.sqlite"
-  build.build(FIXTURE_CACHE, out, root=ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
   base = diff.baseline_pairs(out) | {("openssh", "CVE-2024-7633"), ("openssh", "CVE-2099-1")}
-  res = diff.run_gates(out, ROOT, baseline=base)["lost_cves"]
+  res = diff.run_gates(out, PLAIN_ROOT, baseline=base)["lost_cves"]
   assert res["detail"]["tombstoned"] == 1 and res["detail"]["unlisted"] == [["openssh", "CVE-2099-1"]]
-  only = diff.run_gates(out, ROOT, baseline=base - {("openssh", "CVE-2099-1")})["lost_cves"]
+  only = diff.run_gates(out, PLAIN_ROOT, baseline=base - {("openssh", "CVE-2099-1")})["lost_cves"]
   assert only["ok"] is True
 
 
@@ -87,7 +87,7 @@ def test_flags_report_and_never_block():
 def test_manifest_fields_and_determinism(built, tmp_path):
   zst = tmp_path / "vulndb.sqlite.zst"
   zst.write_bytes(b"fake zstd bytes")
-  record = dict(built[1], gates=diff.run_gates(built[0], ROOT))
+  record = dict(built[1], gates=diff.run_gates(built[0], PLAIN_ROOT))
   built[0].with_name(built[0].name + ".build.json").write_text(json.dumps(record))
   m1 = manifest.make(built[0], zst, FIXTURE_CACHE, built_at="2026-11-14T00:00:00Z")
   m2 = manifest.make(built[0], zst, FIXTURE_CACHE, built_at="2030-01-01T00:00:00Z")
@@ -116,7 +116,7 @@ def test_manifest_refuses_a_failed_gate(built, tmp_path):
 
 def test_cli_manifest_and_grype_skip(tmp_path, capsys):
   db, zst, out = tmp_path / "v.sqlite", tmp_path / "v.sqlite.zst", tmp_path / "manifest.json"
-  assert cli.main(["build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(db)]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(db)]) == 0
   zst.write_bytes(b"z")
   assert cli.main(["manifest", "--db", str(db), "--zst", str(zst), "--cache", str(FIXTURE_CACHE), "--out", str(out)]) == 0
   m = json.loads(out.read_text())
@@ -129,10 +129,10 @@ def test_cli_manifest_and_grype_skip(tmp_path, capsys):
 
 def test_cli_build_with_baseline_records_tombstone_and_flags(built, tmp_path, capsys):
   out = tmp_path / "w.sqlite"
-  assert cli.main(["build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(out), "--baseline", str(built[0])]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(out), "--baseline", str(built[0])]) == 0
   rec = json.loads((tmp_path / "w.sqlite.build.json").read_text())
   assert rec["gates"]["row_delta"]["ok"] and rec["diff"]["pairs"]["added"] == 0
-  assert cli.main(["build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(out), "--baseline", str(built[0]),
+  assert cli.main(["--root", str(PLAIN_ROOT), "build", "--offline", "--cache", str(FIXTURE_CACHE), "--out", str(out), "--baseline", str(built[0]),
                    "--max-bytes", "10"]) == 1
   capsys.readouterr()
 
@@ -148,13 +148,13 @@ def test_row_delta_exempts_new_products_and_overrides():
 
 def test_row_delta_does_not_count_tombstoned_losses(tmp_path):
   out = tmp_path / "tomb.sqlite"
-  build.build(FIXTURE_CACHE, out, root=ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None, baseline_cves={"CVE-2024-7633"})
   base = diff.baseline_pairs(out) | {("openssh", "CVE-2024-7633")}
   strict = {"delta_pct": 0, "delta_floor": 0, "max_bytes": 32 * 2**20}
-  res = diff.run_gates(out, ROOT, baseline=base, limits=strict)
+  res = diff.run_gates(out, PLAIN_ROOT, baseline=base, limits=strict)
   assert res["row_delta"]["ok"] and res["lost_cves"]["ok"] and res["lost_cves"]["detail"]["tombstoned"] == 1
   base = base | {("openssh", "CVE-2099-1")}  # a real loss still counts
-  assert not diff.run_gates(out, ROOT, baseline=base, limits=strict)["row_delta"]["ok"]
+  assert not diff.run_gates(out, PLAIN_ROOT, baseline=base, limits=strict)["row_delta"]["ok"]
 
 
 def test_delta_override_file_needs_a_reason(root_copy):
@@ -166,7 +166,7 @@ def test_delta_override_file_needs_a_reason(root_copy):
   assert diff.read_delta_overrides(p) == {"openssh": "map rewrite reviewed"}
   assert diff.read_delta_overrides(root_copy / "allowlist/none.tsv") == {}  # the file is optional
   db = root_copy / "v.sqlite"
-  build.build(FIXTURE_CACHE, db, root=ROOT, log=lambda *_: None)
+  build.build(FIXTURE_CACHE, db, root=PLAIN_ROOT, log=lambda *_: None)
   base = {(p_, c) for p_, c in diff.baseline_pairs(db)} | {("openssh", f"CVE-2099-{i}") for i in range(50)}
   res = diff.run_gates(db, root_copy, baseline=base, limits={"delta_pct": 0, "delta_floor": 0, "max_bytes": 2**25})
   assert res["row_delta"]["ok"] and res["row_delta"]["detail"]["exempt"] == ["openssh"]
