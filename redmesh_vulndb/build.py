@@ -16,12 +16,12 @@ import tomllib
 from collections import Counter
 from pathlib import Path
 
-from . import __version__, cvelist, fetch, nvd
+from . import __version__, cvelist, distro, fetch, nvd
 from .versions import MATCHER_REV, validate_constraint
 
 _PKG = Path(__file__).resolve().parents[1]
 ROOT = _PKG if (_PKG / "product_map.toml").exists() else Path.cwd()  # data files: next to the package, else the working directory
-MODEL, REVISION, ADDITION = 1, 0, 0
+MODEL, REVISION, ADDITION = 1, 0, 1  # 1.0.1: distro_fix table added
 SCHEMA_VERSION = f"{MODEL}.{REVISION}.{ADDITION}"
 PAGE_SIZE = 4096
 DDL = """
@@ -39,6 +39,10 @@ CREATE TABLE cvss(cve_id TEXT NOT NULL, version TEXT NOT NULL, vector TEXT NOT N
   source TEXT NOT NULL CHECK(source IN ('cna','nvd','adp')), PRIMARY KEY(cve_id, version, source, vector)) WITHOUT ROWID;
 CREATE TABLE meta(k TEXT PRIMARY KEY, v TEXT NOT NULL) WITHOUT ROWID;
 CREATE TABLE eol(product TEXT PRIMARY KEY, oldest_supported TEXT NOT NULL) WITHOUT ROWID;
+CREATE TABLE distro_fix(distro TEXT NOT NULL CHECK(distro IN ('ubuntu','debian')), release TEXT NOT NULL,
+  product TEXT NOT NULL, package TEXT NOT NULL, cve_id TEXT NOT NULL,
+  status TEXT NOT NULL CHECK(status IN ('fixed','not_affected','open')), fixed_version TEXT, source TEXT NOT NULL,
+  PRIMARY KEY(distro, release, package, cve_id)) WITHOUT ROWID;
 """
 # Display CVSS, first match wins: v3.x keeps the label (v4 display is RM-170), so CNA v3, then NVD v3, then CISA ADP v3,
 # then v4 (CNA, NVD, ADP), then v2.
@@ -99,10 +103,12 @@ def load_config(root):
       aliases[(vendor.lower(), product.lower())] = prod
   overlay = json.loads((root / "overlay/curated.json").read_text())
   eol = {k: v["oldest_supported"] for k, v in tomllib.loads((root / "eol.toml").read_text()).items()}
-  files = {n: sha256_bytes((root / n).read_bytes()) for n in ("product_map.toml", "overlay/curated.json", "eol.toml")}
+  dm_path = root / "distro_map.toml"
+  dm = tomllib.loads(dm_path.read_text()) if dm_path.exists() else None  # optional: without it no distro_fix rows
+  files = {n: sha256_bytes((root / n).read_bytes()) for n in ("product_map.toml", "overlay/curated.json", "eol.toml", *(["distro_map.toml"] if dm else []))}
   rules = {"component_products": frozenset(pmap.get("rules", {}).get("component_products", []))}
   supersede = {tuple(p) for p in pmap.get("supersede", {}).get("pairs", [])}
-  return {"products": pm, "rules": rules, "supersede": supersede, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files}
+  return {"products": pm, "rules": rules, "supersede": supersede, "vp2prod": vp2prod, "aliases": aliases, "overlay": overlay, "eol": eol, "files": files, "distro": dm}
 
 
 def load_kev(path):
@@ -248,6 +254,9 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     "eol": sorted(cfg["eol"].items()),
   }
   stats["pairs"] = len({(r[0], r[2]) for r in tables["affected"]})
+  fix_rows = distro.distro_fix_rows(cfg, inp, {(r[0], r[2]) for r in tables["affected"]}, stats)
+  if fix_rows is not None:
+    tables["distro_fix"] = fix_rows
   stats["zero_hit_names"] = sorted(n for spec in cfg["products"].values() for n in spec.get("nvd", [])
                                    if not stats.get(f"hit {n}"))
   nvd_ids = sha256_bytes("".join(f"{k}:{manifest['inputs'][k]['sha256']}\n" for k in sorted(manifest["inputs"])
@@ -264,6 +273,10 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     "overlay_source_commit": cfg["overlay"]["source_commit"],
     "overlay_row_count": str(cfg["overlay"]["row_count"]),
   }
+  for kind in ("oval", "debian"):  # a distro source has no release tag: its snapshot is a hash of its input hashes
+    if inp[kind] and "distro_fix" in tables:
+      snapshot[f"snapshot_{kind}"] = sha256_bytes("".join(f"{k}:{manifest['inputs'][k]['sha256']}\n" for k in sorted(manifest["inputs"])
+                                                         if k.startswith(kind + "/")).encode())[:16]
   build_id = "vulndb-" + sha256_bytes(json.dumps(
     [__version__, SCHEMA_VERSION, MATCHER_REV, snapshot, cfg["files"], {k: v["sha256"] for k, v in manifest["inputs"].items()},
      sorted(tombstones)],
@@ -292,7 +305,7 @@ def write_db(path, tables):
 
 def _pk(table):
   return {"vuln": lambda r: r[0], "affected": lambda r: (r[0], r[2], r[1]), "cvss": lambda r: (r[0], r[1], r[4], r[2]),
-          "meta": lambda r: r[0], "eol": lambda r: r[0]}[table]
+          "meta": lambda r: r[0], "eol": lambda r: r[0], "distro_fix": lambda r: (r[0], r[1], r[3], r[4])}[table]
 
 
 def content_hash(path):

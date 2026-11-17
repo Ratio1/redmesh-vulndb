@@ -6,6 +6,8 @@ Layout of the cache:
   cvelist/<asset>.zip                                              cvelistV5 release
   kev/kev.json                                                     CISA KEV
   epss/epss_scores-current.csv.gz                                  FIRST EPSS daily CSV (header has the model version)
+  oval/com.ubuntu.<codename>.cve.oval.xml.bz2                      Canonical CVE OVAL per Ubuntu release (optional: distro_fix)
+  debian/security-tracker.json                                     Debian Security Tracker JSON (optional: distro_fix)
   manifest.json                                                    {"inputs": {path: {sha256, bytes, url}}, "sources": {...}}
 `sources.cvelist` / `sources.overrides` name the one file of their folder that the build reads ({"file", "release"|"commit"});
 `fetch --refresh` deletes the superseded ones. `build --offline` reads only the manifest's files and refuses a
@@ -28,7 +30,11 @@ EPSS_URL = "https://epss.empiricalsecurity.com/epss_scores-current.csv.gz"
 CVELIST_API = "https://api.github.com/repos/CVEProject/cvelistV5/releases/latest"
 OVERRIDES_API = "https://api.github.com/repos/anchore/nvd-data-overrides/commits/main"
 OVERRIDES_ZIP = "https://codeload.github.com/anchore/nvd-data-overrides/zip/"
-KINDS = {"nvd": "*.json.gz", "overrides": "*.zip", "cvelist": "*.zip", "kev": "*.json", "epss": "*.csv.gz"}
+OVAL_URL = "https://security-metadata.canonical.com/oval/com.ubuntu.{}.cve.oval.xml.bz2"
+DEBIAN_URL = "https://security-tracker.debian.org/tracker/data/json"
+UBUNTU_RELEASES = ("focal", "jammy", "noble")  # the releases of distro_map.toml
+KINDS = {"nvd": "*.json.gz", "overrides": "*.zip", "cvelist": "*.zip", "kev": "*.json", "epss": "*.csv.gz",
+         "oval": "*.xml.bz2", "debian": "*.json"}
 
 
 def sha256_file(path):
@@ -175,6 +181,9 @@ def fetch(cache, refresh=False, log=print):
     get(f"nvd/nvdcve-2.0-{y}.json.gz", f"{NVD_BASE}nvdcve-2.0-{y}.json.gz")
   get("kev/kev.json", KEV_URL)
   get("epss/epss_scores-current.csv.gz", EPSS_URL)
+  for rel_name in UBUNTU_RELEASES:
+    get(f"oval/com.ubuntu.{rel_name}.cve.oval.xml.bz2", OVAL_URL.format(rel_name))
+  get("debian/security-tracker.json", DEBIAN_URL)
   if refresh or not list((cache / "cvelist").glob("*.zip")):
     with _open(CVELIST_API) as r:
       rel = json.load(r)

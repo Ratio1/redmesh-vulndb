@@ -40,5 +40,23 @@ source's current terms before the first release.
    https://github.com/anchore/nvd-data-overrides, licensed CC0 1.0 (generated hourly by Anchore from
    https://github.com/anchore/cve-data-enrichment).
 
+7. Canonical Ubuntu CVE OVAL (distro_fix table, Ubuntu rows)
+   Credit: Canonical Ltd. Fix status per Ubuntu release and source package comes from the Canonical CVE OVAL
+   files, https://security-metadata.canonical.com/oval/ (com.ubuntu.<release>.cve.oval.xml.bz2), licensed under
+   Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),
+   https://security-metadata.canonical.com/oval/LICENSE (https://creativecommons.org/licenses/by-sa/4.0/).
+   Each advisory in the files carries `Copyright (C) 2026 Canonical Ltd.`. Changes made: the data was reduced
+   to per-package fix status (fixed with version, open, not affected) for the products in distro_map.toml and
+   the CVEs the database already lists for them. Because the database contains this data, the published
+   database is distributed under CC BY-SA 4.0. Ubuntu is a registered trademark of Canonical Ltd.; this product
+   is not endorsed by Canonical.
+
+8. Debian Security Tracker (distro_fix table, Debian rows)
+   Attribution: Debian Security Tracker, https://security-tracker.debian.org. Fix status per Debian release and
+   source package comes from https://security-tracker.debian.org/tracker/data/json. The tracker states no data
+   licence (the tracker code, https://salsa.debian.org/security-tracker-team/security-tracker, is GPL-2+); the site
+   says its data "comes solely from the bug database maintained by Debian's security team". Debian is a registered
+   trademark of Software in the Public Interest, Inc.; this product is not endorsed by Debian.
+
 The curated overlay (overlay/curated.json) and the product map are RedMesh work. CVE titles and CWE ids in
 the overlay come from the RedMesh catalog, which cites the same sources.

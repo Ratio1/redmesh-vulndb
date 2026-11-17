@@ -6,11 +6,11 @@ import pytest
 
 from redmesh_vulndb import cli, diff
 
-from .conftest import ROOT
+from .conftest import PLAIN_ROOT, ROOT
 
 
 def test_all_gates_pass_on_fixture_build(built):
-  res = diff.run_gates(built[0], ROOT)
+  res = diff.run_gates(built[0], PLAIN_ROOT)
   assert {k for k, v in res.items() if not v["ok"]} == set(), res
   assert set(res) == {"integrity", "schema", "t1_recall", "t2_first_fixed", "t3_above_max", "t4_matcher", "lost_cves", "size"}
 
@@ -102,14 +102,14 @@ def test_diff_reports_pairs_kev_and_bands(built, tmp_path):
 
 
 def test_cli_gate_diff_and_build(built, tmp_path, capsys):
-  assert cli.main(["gate", str(built[0])]) == 0
-  assert cli.main(["diff", str(built[0]), str(built[0])]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "gate", str(built[0])]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "diff", str(built[0]), str(built[0])]) == 0
   out = tmp_path / "v.sqlite"
-  assert cli.main(["build", "--offline", "--cache", str(ROOT / "tests/fixtures/cache"), "--out", str(out)]) == 0
+  assert cli.main(["--root", str(PLAIN_ROOT), "build", "--offline", "--cache", str(ROOT / "tests/fixtures/cache"), "--out", str(out)]) == 0
   rec = json.loads((tmp_path / "v.sqlite.build.json").read_text())
   assert rec["content_hash"] == built[1]["content_hash"] and rec["sha256"] == built[1]["sha256"]
   assert all(g["ok"] for g in rec["gates"].values())
-  assert cli.main(["build", "--offline", "--cache", str(ROOT / "tests/fixtures/cache"), "--out", str(tmp_path / "w.sqlite"),
+  assert cli.main(["--root", str(PLAIN_ROOT), "build", "--offline", "--cache", str(ROOT / "tests/fixtures/cache"), "--out", str(tmp_path / "w.sqlite"),
                    "--baseline", str(out)]) == 0
   assert json.loads((tmp_path / "w.sqlite.build.json").read_text())["diff"]["pairs"]["added"] == 0
   capsys.readouterr()
@@ -125,7 +125,7 @@ def test_cli_fetch_manifest_only(tmp_path):
 
 def test_lost_gate_excuses_component_drops_only(built):
   base = diff.baseline_pairs(built[0]) | {("mysql", "CVE-2021-3711"), ("nginx", "CVE-2099-1234")}
-  run = lambda ex: diff.run_gates(built[0], ROOT, baseline=base, excused=ex)["lost_cves"]  # noqa: E731
+  run = lambda ex: diff.run_gates(built[0], PLAIN_ROOT, baseline=base, excused=ex)["lost_cves"]  # noqa: E731
   assert run([])["ok"] is False
   res = run([["mysql", "CVE-2021-3711"]])
   assert res["ok"] is False and res["detail"]["unlisted"] == [["nginx", "CVE-2099-1234"]]  # the unexplained loss still fails

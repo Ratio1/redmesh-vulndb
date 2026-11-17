@@ -17,7 +17,7 @@ publish to an immutable release on `main`, issue on failure). Not yet built: the
 
 ```bash
 uv sync
-uv run redmesh-vulndb fetch --cache CACHE            # NVD yearly + modified, nvd-data-overrides, cvelistV5, KEV, EPSS; sha256 per input
+uv run redmesh-vulndb fetch --cache CACHE            # NVD yearly + modified, nvd-data-overrides, cvelistV5, KEV, EPSS, Ubuntu OVAL, Debian tracker; sha256 per input
 uv run redmesh-vulndb build --offline --cache CACHE --out OUT.sqlite [--baseline OLD.sqlite]   # without --offline: fetch what the cache lacks first
 uv run redmesh-vulndb gate OUT.sqlite [--baseline OLD.sqlite]   # integrity, schema, T1-T4, lost-CVE check, size; with --baseline also per-product row delta
 uv run redmesh-vulndb manifest --db OUT.sqlite --zst OUT.sqlite.zst --cache CACHE --out manifest.json   # zstd made with the zstd CLI
@@ -35,10 +35,11 @@ the checkout of the package, else the working directory.
 
 - `redmesh_vulndb/`: `fetch.py` (cache and manifest), `nvd.py` (NVD feeds and overrides), `cvelist.py` (CNA ranges, CVSS,
   titles), `versions.py` (the edge-node matcher, vendored at `3205d18`), `build.py` (rules, deterministic writer,
-  `content_hash`), `diff.py` (diff and gates), `manifest.py` (manifest, flags), `cli.py`.
+  `content_hash`), `distro.py` (Ubuntu OVAL and Debian tracker rows), `diff.py` (diff and gates), `manifest.py` (manifest, flags), `cli.py`.
 - `product_map.toml`: probe product key to NVD `vendor:product` names and reviewed CNA alias pairs.
 - `overlay/curated.json`: the edge-node `CVE_DATABASE` at `3205d18` (374 rows). This repository is its master from now on;
   `scripts/export_overlay.py` was the one-off export.
+- `distro_map.toml`: the `distro_fix` table (schema 1.0.1): releases, product to source-package patterns, and golden facts.
 - `eol.toml`: oldest supported branch per product (hand-kept, reviewed by pull request).
 - `allowlist/lost.tsv`: CVEs allowed to disappear between builds, each with a reason.
 - `allowlist/delta.tsv`: products exempt from the per-product row-delta gate for a run with a known large change (`product<TAB>reason`).
@@ -57,6 +58,19 @@ the checkout of the package, else the working directory.
 - Gates (all offline): `PRAGMA integrity_check`, schema check, T1 vulhub recall and the 9 prototype regressions, T2 no row fires
   at its first-fixed bound, T3 a version above the maximum bound gives 0 findings, T4 the matcher cases, lost-CVE diff.
 
+## Distro fixes (`distro_fix`, schema 1.0.1)
+
+Licence: the published database contains Canonical CVE OVAL data and is distributed under CC BY-SA 4.0 (see `THIRD_PARTY_DATA_NOTICES`).
+
+One row per distro release, source package and CVE: `status` is `fixed` (with the full package version in `fixed_version`),
+`not_affected` or `open`. Sources: Canonical CVE OVAL (focal, jammy, noble; `ubuntu_oval`) and the Debian Security Tracker
+JSON (bookworm, trixie; `debian_tracker`; bullseye is no longer in the tracker). Only products of `distro_map.toml` and only
+CVEs that already have an `affected` row for the product. Ubuntu: a CVE definition that does not list the package is
+`not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro) is `open`. Debian: `resolved`
+at version `0` is `not_affected`. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
+release with no rows (also when the sources are missing from the cache) or a wrong golden fact; the build fails on an OVAL phrase it does not understand. A row says what the distribution did, not what a host runs: the reader compares
+the installed package version with `fixed_version`. Without `distro_map.toml` the table is empty and the gate does not run.
+
 ## Release workflow
 
 `.github/workflows/build.yml` runs weekly and on dispatch. `build` fetches the feeds, builds against the baseline (the newest
@@ -70,5 +84,6 @@ Owner settings (not done by an agent): protect `main`, and add a deployment bran
 
 ## Licence
 
-Not chosen yet. Third-party data notices (CVE, NVD, KEV, EPSS, FIRST CVSS, Anchore overrides) are in
+Code: not chosen yet. Published database: CC BY-SA 4.0, because it contains Canonical CVE OVAL data. Third-party data
+notices (CVE, NVD, KEV, EPSS, FIRST CVSS, Anchore overrides, Canonical CVE OVAL, Debian Security Tracker) are in
 `THIRD_PARTY_DATA_NOTICES` and ship with every published build.
