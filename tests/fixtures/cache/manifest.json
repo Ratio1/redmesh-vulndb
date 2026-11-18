@@ -1,0 +1,118 @@
+{
+ "inputs": {
+  "cvelist/cves.zip": {
+   "bytes": 112820,
+   "sha256": "8e5d4978737f906e6f3f3f57c2b4cfaea68b6dd2be8edd11caa07f1982768789",
+   "url": ""
+  },
+  "epss/epss_scores-current.csv.gz": {
+   "bytes": 567,
+   "sha256": "7e6287347d1b14bc87ac91165e34bd7c2f8b86d00537551e930c6b6d83394b0a",
+   "url": ""
+  },
+  "kev/kev.json": {
+   "bytes": 17062,
+   "sha256": "2e25f6f5e2332fac856cad9ec5b49b26457c64ca95b1fbc6b6be3fdbba2916ae",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2002.json.gz": {
+   "bytes": 1436,
+   "sha256": "7e029931b3e99c8f581d48c4cb45da109337154244f1c3901fbd671be7b84acd",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2012.json.gz": {
+   "bytes": 3453,
+   "sha256": "3363dce522339bdf1ead99550687e8eb2f176535fd0613e3db71d97e464402f9",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2013.json.gz": {
+   "bytes": 1554,
+   "sha256": "5ad2864639728ee0f2584513b4e689f42031dc81fb366d9d1df154ffc257d91c",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2014.json.gz": {
+   "bytes": 7569,
+   "sha256": "8166c28536e9d189398be18c2f1448c3777db0ecbb198a76954ac16bfc704064",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2015.json.gz": {
+   "bytes": 1918,
+   "sha256": "8e030ef725b5661b88c214c3486c89f49f691ac607cb25d0c67be8ac8a6ccdcb",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2016.json.gz": {
+   "bytes": 3218,
+   "sha256": "f8060ffa79ee5cb215796fdf13e05a70d40ed53811ea3c7ffe9f058358b9eb09",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2017.json.gz": {
+   "bytes": 11476,
+   "sha256": "758f0bb8ad1fc805510487c4b55f221aa7144f3e5890d8a95115f91f6d7bc5af",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2018.json.gz": {
+   "bytes": 5668,
+   "sha256": "08c7e55a491c8174b0f730d9f3c98cda73f2984b9fc743c5b65d7e04b94a7bed",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2019.json.gz": {
+   "bytes": 2765,
+   "sha256": "dfc9770f859d3bc357bbd59cb918963cc9cbeab68567c9dcbbf1c3f53e98752e",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2020.json.gz": {
+   "bytes": 10355,
+   "sha256": "93c0afea8152d0ccab4208aa4176873c9ba95cc4d1b62b3e0cb6739232e0ead6",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2021.json.gz": {
+   "bytes": 4520,
+   "sha256": "8c92abeb55e89756f39e81c1f732a58ec9266c1271a92795b283d227a0c02019",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2022.json.gz": {
+   "bytes": 8932,
+   "sha256": "1788eb870f352688b1c7ef74dde00b6f89d568dbdefc327a36f608a7e0cce981",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2023.json.gz": {
+   "bytes": 2814,
+   "sha256": "33c2b60346de57482ae75ba5797ecea0a6088d42c4cc5c11a817e44f4d7d5bf0",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2024.json.gz": {
+   "bytes": 9281,
+   "sha256": "05f58b378acf6d0180264f07ad7a69408536c03ea0a4de0939fb096e1cb982c8",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2025.json.gz": {
+   "bytes": 7324,
+   "sha256": "2936d6dcff952155cfaac60a6c367dcd1116e2f7747b46b01859a8f5bc700596",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-2026.json.gz": {
+   "bytes": 1764,
+   "sha256": "a1642de0500a4de070f5ffc56fe1192381681745a2cf6f2df08d654b1ec840fc",
+   "url": ""
+  },
+  "nvd/nvdcve-2.0-modified.json.gz": {
+   "bytes": 8393,
+   "sha256": "e95f84bacd93c7b182b4ba99c8d0896bacb095e7cbff7fbe688865a57a52a737",
+   "url": ""
+  },
+  "overrides/nvd-data-overrides-7c9258bb6d2ebb371a3b55b20a608f64c0e73753.zip": {
+   "bytes": 6953,
+   "sha256": "6fcc41bb7fdca6d372dfbf8988b5ea14a8695d8fb6bb25e18f68f0fbd014a780",
+   "url": ""
+  }
+ },
+ "sources": {
+  "cvelist": {
+   "file": "cvelist/cves.zip"
+  },
+  "overrides": {
+   "commit": "7c9258bb6d2ebb371a3b55b20a608f64c0e73753",
+   "file": "overrides/nvd-data-overrides-7c9258bb6d2ebb371a3b55b20a608f64c0e73753.zip"
+  }
+ }
+}

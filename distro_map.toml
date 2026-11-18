@@ -1,0 +1,78 @@
+# Distro-fix map (RM-200): which distribution releases and source packages feed the `distro_fix` table.
+#
+# [ubuntu].releases: Canonical CVE OVAL files `com.ubuntu.<release>.cve.oval.xml.bz2` (fetch.UBUNTU_RELEASES must list the same).
+# [debian].releases: suites of the Debian Security Tracker JSON. bullseye is not listed: the tracker no longer carries it
+#   (checked 2026-11-17: only sid, forky, trixie, bookworm).
+# [packages]: probe product key -> full-match regexes of SOURCE package names, the same for both distros. A product with no
+#   matching package in a release has no rows there. The products are edge-node's `_BACKPORTED_PRODUCTS`; couchdb and mongodb
+#   are listed for completeness (neither distro ships couchdb; Ubuntu ships `mongodb` up to focal). php and dovecot are
+#   not in product_map.toml yet, so they get rows only once they are.
+# [[golden]]: facts the build must reproduce, else the `distro_fix` gate fails. They are real data (2026-11-17): a changed
+#   fact means the source or the parser changed meaning, and a person must look. `fixed_version` is optional.
+
+[ubuntu]
+releases = ["focal", "jammy", "noble"]
+
+[debian]
+releases = ["bookworm", "trixie"]
+
+[packages]
+apache = ["apache2"]
+bind = ["bind9"]
+couchdb = ["couchdb"]
+dovecot = ["dovecot"]
+exim = ["exim4"]
+mariadb = ['mariadb(-\d+\.\d+)?']
+memcached = ["memcached"]
+mongodb = ["mongodb"]
+mysql = ['mysql-\d+\.\d+']
+nginx = ["nginx"]
+openssh = ["openssh"]
+openssl = ["openssl"]
+php = ['php\d+\.\d+']
+postfix = ["postfix"]
+postgresql = ['postgresql-\d+']
+proftpd = ["proftpd-dfsg"]
+redis = ["redis"]
+samba = ["samba"]
+tomcat = ['tomcat\d+']
+vsftpd = ["vsftpd"]
+
+[[golden]]
+distro = "ubuntu"
+release = "jammy"
+package = "openssh"
+cve_id = "CVE-2023-48795"
+status = "fixed"
+fixed_version = "1:8.9p1-3ubuntu0.5"
+
+[[golden]]
+distro = "ubuntu"
+release = "jammy"
+package = "openssh"
+cve_id = "CVE-2023-51385"
+status = "fixed"
+fixed_version = "1:8.9p1-3ubuntu0.6"
+
+[[golden]]
+distro = "ubuntu"
+release = "jammy"
+package = "openssh"
+cve_id = "CVE-2026-106588"
+status = "not_affected"
+
+[[golden]]
+distro = "ubuntu"
+release = "jammy"
+package = "openssh"
+cve_id = "CVE-2026-60002"
+status = "fixed"
+fixed_version = "1:8.9p1-3ubuntu0.16"
+
+[[golden]]
+distro = "debian"
+release = "bookworm"
+package = "openssh"
+cve_id = "CVE-2023-48795"
+status = "fixed"
+fixed_version = "1:9.2p1-2+deb12u2"

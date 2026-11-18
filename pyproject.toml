@@ -1,0 +1,23 @@
+[project]
+name = "redmesh-vulndb"
+version = "0.1.0"
+description = "Builder for the RedMesh vulnerability database"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+redmesh-vulndb = "redmesh_vulndb.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling==1.33.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["redmesh_vulndb"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

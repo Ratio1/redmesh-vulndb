@@ -1,0 +1,2 @@
+# product<TAB>reason. Exempts a product from the row_delta gate for runs with a known large change (a product-map rewrite).
+# Reviewed by pull request; remove the line after the run that needed it. A line without a reason fails the build.

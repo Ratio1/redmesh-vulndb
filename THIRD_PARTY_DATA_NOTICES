@@ -1,0 +1,62 @@
+Third-party data notices for redmesh-vulndb
+
+A database built by this repository contains data from the sources below. Copies of the database, and
+products that ship it, must carry these notices. Draft of 2026-11-14: confirm each wording against the
+source's current terms before the first release.
+
+1. CVE List V5 (CVE Program, MITRE)
+   CVE(R) is a registered trademark of The MITRE Corporation. The vulnerability records (CVE IDs, CNA
+   titles, descriptions, CWE ids, CNA and CISA-ADP CVSS data and CNA affected-version ranges) come from
+   CVE List V5, https://github.com/CVEProject/cvelistV5, under the CVE Program Terms of Use,
+   https://www.cve.org/Legal/TermsOfUse. MITRE grants users a perpetual, worldwide, non-exclusive,
+   no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of,
+   publicly display, publicly perform, sublicense, and distribute Common Vulnerabilities and Exposures
+   (CVE). Any copy made for such purposes is authorized provided that MITRE's copyright designation and
+   this license are reproduced in the copy. Copyright (c) 1999-2026, The MITRE Corporation. All rights
+   reserved.
+
+2. National Vulnerability Database (NIST)
+   This product uses data from the NVD API but is not endorsed or certified by the NVD.
+   Source: https://nvd.nist.gov/ (JSON 2.0 yearly and modified feeds). The NVD name is not used to imply
+   endorsement.
+
+3. CISA Known Exploited Vulnerabilities (KEV) catalog
+   Source: https://www.cisa.gov/known-exploited-vulnerabilities-catalog, published by the Cybersecurity
+   and Infrastructure Security Agency under CC0 1.0 (https://github.com/cisagov/kev-data). This product is
+   not endorsed by CISA; the CISA logo and the DHS seal are not used.
+
+4. FIRST Exploit Prediction Scoring System (EPSS)
+   EPSS scores and percentiles come from the daily EPSS data, https://www.first.org/epss/. We acknowledge
+   the Forum of Incident Response and Security Teams (FIRST) and the EPSS Special Interest Group, which
+   maintain EPSS. The model version of each build is recorded in the database (meta.epss_model_version).
+
+5. CVSS (FIRST)
+   CVSS is owned and managed by FIRST.Org, Inc. (FIRST) and used by permission. Scores and vectors in the
+   database are the base scores published by the CNA, NVD or CISA-ADP, labelled with their source.
+   https://www.first.org/cvss/
+
+6. anchore/nvd-data-overrides
+   CPE configurations for CVEs NVD has not analysed yet come from
+   https://github.com/anchore/nvd-data-overrides, licensed CC0 1.0 (generated hourly by Anchore from
+   https://github.com/anchore/cve-data-enrichment).
+
+7. Canonical Ubuntu CVE OVAL (distro_fix table, Ubuntu rows)
+   Credit: Canonical Ltd. Fix status per Ubuntu release and source package comes from the Canonical CVE OVAL
+   files, https://security-metadata.canonical.com/oval/ (com.ubuntu.<release>.cve.oval.xml.bz2), licensed under
+   Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0),
+   https://security-metadata.canonical.com/oval/LICENSE (https://creativecommons.org/licenses/by-sa/4.0/).
+   Each advisory in the files carries `Copyright (C) 2026 Canonical Ltd.`. Changes made: the data was reduced
+   to per-package fix status (fixed with version, open, not affected) for the products in distro_map.toml and
+   the CVEs the database already lists for them. Because the database contains this data, the published
+   database is distributed under CC BY-SA 4.0. Ubuntu is a registered trademark of Canonical Ltd.; this product
+   is not endorsed by Canonical.
+
+8. Debian Security Tracker (distro_fix table, Debian rows)
+   Attribution: Debian Security Tracker, https://security-tracker.debian.org. Fix status per Debian release and
+   source package comes from https://security-tracker.debian.org/tracker/data/json. The tracker states no data
+   licence (the tracker code, https://salsa.debian.org/security-tracker-team/security-tracker, is GPL-2+); the site
+   says its data "comes solely from the bug database maintained by Debian's security team". Debian is a registered
+   trademark of Software in the Public Interest, Inc.; this product is not endorsed by Debian.
+
+The curated overlay (overlay/curated.json) and the product map are RedMesh work. CVE titles and CWE ids in
+the overlay come from the RedMesh catalog, which cites the same sources.

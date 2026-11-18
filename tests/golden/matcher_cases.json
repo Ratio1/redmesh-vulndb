@@ -1,0 +1,271 @@
+{
+ "source_commit": "6bd9d71",
+ "cases": [
+  {
+   "product": "",
+   "version": "8.9",
+   "constraint": "<8.9p1",
+   "expected": true,
+   "why": "openssh: probe drops p1; 8.9 sorts below 8.9p1"
+  },
+  {
+   "product": "",
+   "version": "8.9p1",
+   "constraint": "<8.9",
+   "expected": false,
+   "why": "p1 > base"
+  },
+  {
+   "product": "openssl",
+   "version": "1.0.1f",
+   "constraint": "<1.0.1g",
+   "expected": true,
+   "why": "openssl letter"
+  },
+  {
+   "product": "openssl",
+   "version": "1.0.1",
+   "constraint": "<1.0.1a",
+   "expected": true,
+   "why": "openssl base < a"
+  },
+  {
+   "product": "",
+   "version": "3.0.0rc1",
+   "constraint": "<3.0.0",
+   "expected": true,
+   "why": "rc before release"
+  },
+  {
+   "product": "",
+   "version": "3.0.0-beta1",
+   "constraint": "<3.0.0",
+   "expected": true,
+   "why": "beta before release"
+  },
+  {
+   "product": "proftpd",
+   "version": "1.3.6rc2",
+   "constraint": "<1.3.6",
+   "expected": true,
+   "why": "proftpd rc"
+  },
+  {
+   "product": "",
+   "version": "9.0.0.M1",
+   "constraint": "<9.0.0",
+   "expected": true,
+   "why": "tomcat milestone"
+  },
+  {
+   "product": "bind",
+   "version": "9.18.24-S1",
+   "constraint": "==9.18.24",
+   "expected": false,
+   "why": "BIND S1 is a different build"
+  },
+  {
+   "product": "bind",
+   "version": "9.18.24-S1",
+   "constraint": ">=9.18.24",
+   "expected": true,
+   "why": "BIND S1 sorts after the plain build"
+  },
+  {
+   "product": "",
+   "version": "1:8.9p1-3ubuntu0.10",
+   "constraint": "<9.8",
+   "expected": true,
+   "why": "epoch stripped"
+  },
+  {
+   "product": "",
+   "version": "2.4.57 (Ubuntu)",
+   "constraint": "<2.4.58",
+   "expected": true,
+   "why": "Server header"
+  },
+  {
+   "product": "",
+   "version": "9.4.51.v20230217",
+   "constraint": "<9.4.52",
+   "expected": true,
+   "why": "jetty stamp"
+  },
+  {
+   "product": "",
+   "version": "2022.83",
+   "constraint": "<2022.83",
+   "expected": false,
+   "why": "dropbear"
+  },
+  {
+   "product": "",
+   "version": "4.96.1",
+   "constraint": "<4.96.1",
+   "expected": false,
+   "why": "exim point"
+  },
+  {
+   "product": "",
+   "version": "10.11.6",
+   "constraint": ">=10.11.0,<10.11.7",
+   "expected": true,
+   "why": "mariadb"
+  },
+  {
+   "product": "php",
+   "version": "8.1.0-dev",
+   "constraint": "<8.1.0",
+   "expected": true,
+   "why": "php dev build before 8.1.0"
+  },
+  {
+   "product": "",
+   "version": "6.6.1p1",
+   "constraint": "<6.6.2",
+   "expected": true,
+   "why": "opensmtpd portable"
+  },
+  {
+   "product": "",
+   "version": "2.5.10.1",
+   "constraint": "<2.5.10.1",
+   "expected": false,
+   "why": "four-part"
+  },
+  {
+   "product": "",
+   "version": "1.0.2",
+   "constraint": "==1.0.2",
+   "expected": true,
+   "why": "exact"
+  },
+  {
+   "product": "openssl",
+   "version": "1.0.2",
+   "constraint": "==1.0.2a",
+   "expected": false,
+   "why": "exact letter"
+  },
+  {
+   "product": "",
+   "version": "3.0.0a1",
+   "constraint": "<3.0.0rc1",
+   "expected": true,
+   "why": "alpha before rc"
+  },
+  {
+   "product": "",
+   "version": "8.1.0-dev",
+   "constraint": "<8.1.0rc1",
+   "expected": true,
+   "why": "dev before rc"
+  },
+  {
+   "product": "",
+   "version": "3.0.0b1",
+   "constraint": ">3.0.0a1",
+   "expected": true,
+   "why": "beta after alpha"
+  },
+  {
+   "product": "bind",
+   "version": "9.10.3-P4",
+   "constraint": ">9.10.3",
+   "expected": true,
+   "why": "BIND patch level sorts after the plain build"
+  },
+  {
+   "product": "bind",
+   "version": "9.10.3-P4",
+   "constraint": "<9.10.3-P5",
+   "expected": true,
+   "why": "BIND patch levels order"
+  },
+  {
+   "product": "openssl",
+   "version": "1.0.2a",
+   "constraint": "<1.0.2b",
+   "expected": true,
+   "why": "openssl: single letter is a release, not alpha"
+  },
+  {
+   "product": "openssl",
+   "version": "1.0.2a",
+   "constraint": ">=1.0.2",
+   "expected": true,
+   "why": "openssl: letter release after base"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-precise",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -precise ends in letters: a release, not pre"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-devel",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -devel is a release, not dev"
+  },
+  {
+   "product": "",
+   "version": "1.2.3rc1",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: rc1 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3M3",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: M3 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-beta",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -beta still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3.M1",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: .M1 still a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-preview",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -preview is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-prerelease",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -prerelease is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-preview2",
+   "constraint": "<1.2.3",
+   "expected": true,
+   "why": "end anchor: -preview2 is a pre-release"
+  },
+  {
+   "product": "",
+   "version": "1.2.3-previews",
+   "constraint": "<1.2.3",
+   "expected": false,
+   "why": "end anchor: -previews ends in more letters: a release"
+  }
+ ]
+}

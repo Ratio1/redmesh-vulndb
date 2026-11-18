@@ -1,0 +1,369 @@
+{
+"catalogVersion": "2026.11.10",
+"count": 23,
+"dateReleased": "2026-11-10T19:03:29.8375Z",
+"title": "CISA Catalog of Known Exploited Vulnerabilities",
+"vulnerabilities": [
+{
+"cveID": "CVE-2016-10033",
+"cwes": [
+"CWE-77",
+"CWE-88"
+],
+"dateAdded": "2025-07-07",
+"dueDate": "2025-07-28",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "This vulnerability could affect an open-source component, third-party library, protocol, or proprietary implementation that could be used by different products. For more information, please see: https://github.com/PHPMailer/PHPMailer/releases/tag/v5.2.18 ; https://github.com/advisories/GHSA-5f37-gxvh-23v6 ; https://nvd.nist.gov/vuln/detail/CVE-2016-10033",
+"product": "PHPMailer",
+"requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+"shortDescription": "PHPMailer contains a command injection vulnerability because it fails to sanitize user-supplied input. Specifically, this issue affects the 'mail()' function of 'class.phpmailer.php' script. An attacker can exploit this issue to execute arbitrary code within the context of the application. Failed exploit attempts will result in a denial-of-service condition.",
+"vendorProject": "PHP",
+"vulnerabilityName": "PHPMailer Command Injection Vulnerability"
+},
+{
+"cveID": "CVE-2025-32433",
+"cwes": [
+"CWE-306"
+],
+"dateAdded": "2025-06-09",
+"dueDate": "2025-06-30",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "This vulnerability affects a common open-source project, third-party library, or a protocol used by different products. For more information, please see: https://github.com/erlang/otp/security/advisories/GHSA-37cp-fgq5-7wc2 ; https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-erlang-otp-ssh-xyZZy ; https://nvd.nist.gov/vuln/detail/CVE-2025-32433",
+"product": "Erlang/OTP",
+"requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+"shortDescription": "Erlang Erlang/OTP SSH server contains a missing authentication for critical function vulnerability. This could allow an attacker to execute arbitrary commands without valid credentials, potentially leading to unauthenticated remote code execution (RCE). By exploiting a flaw in how SSH protocol messages are handled, a malicious actor could gain unauthorized access to affected systems. This vulnerability could affect various products that implement Erlang/OTP SSH server, including\u2014but not limited to\u2014Cisco, NetApp, and SUSE.",
+"vendorProject": "Erlang",
+"vulnerabilityName": "Erlang Erlang/OTP SSH Server Missing Authentication for Critical Function Vulnerability"
+},
+{
+"cveID": "CVE-2025-24813",
+"cwes": [
+"CWE-44",
+"CWE-502"
+],
+"dateAdded": "2025-04-01",
+"dueDate": "2025-04-22",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "This vulnerability affects a common open-source component, third-party library, or a protocol used by different products. Please check with specific vendors for information on patching status. For more information, please see: https://lists.apache.org/thread/j5fkjv2k477os90nczf2v9l61fb0kkgq ; https://nvd.nist.gov/vuln/detail/CVE-2025-24813",
+"product": "Tomcat",
+"requiredAction": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
+"shortDescription": "Apache Tomcat contains a path equivalence vulnerability that allows a remote attacker to execute code, disclose information, or inject malicious content via a partial PUT request. This vulnerability can be chained with CVE\u20112026\u201134486.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache Tomcat Path Equivalence Vulnerability"
+},
+{
+"cveID": "CVE-2023-23752",
+"cwes": [
+"CWE-284"
+],
+"dateAdded": "2024-01-08",
+"dueDate": "2024-01-29",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://developer.joomla.org/security-centre/894-20230201-core-improper-access-check-in-webservice-endpoints.html;  https://nvd.nist.gov/vuln/detail/CVE-2023-23752",
+"product": "Joomla!",
+"requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+"shortDescription": "Joomla! contains an improper access control vulnerability that allows unauthorized access to webservice endpoints.",
+"vendorProject": "Joomla!",
+"vulnerabilityName": "Joomla! Improper Access Control Vulnerability"
+},
+{
+"cveID": "CVE-2021-3129",
+"cwes": [],
+"dateAdded": "2023-09-18",
+"dueDate": "2023-10-09",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://github.com/facade/ignition/releases/tag/2.5.2; https://nvd.nist.gov/vuln/detail/CVE-2021-3129",
+"product": "Ignition",
+"requiredAction": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+"shortDescription": "Laravel Ignition contains a file upload vulnerability that allows unauthenticated remote attackers to execute malicious code due to insecure usage of file_get_contents() and file_put_contents().",
+"vendorProject": "Laravel",
+"vulnerabilityName": "Laravel Ignition File Upload Vulnerability"
+},
+{
+"cveID": "CVE-2023-21839",
+"cwes": [],
+"dateAdded": "2023-05-01",
+"dueDate": "2023-05-22",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://www.oracle.com/security-alerts/cpujan2023.html;  https://nvd.nist.gov/vuln/detail/CVE-2023-21839",
+"product": "WebLogic Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Oracle WebLogic Server contains an unspecified vulnerability that allows an unauthenticated attacker with network access via T3, IIOP, to compromise Oracle WebLogic Server.",
+"vendorProject": "Oracle",
+"vulnerabilityName": "Oracle WebLogic Server Unspecified Vulnerability"
+},
+{
+"cveID": "CVE-2017-7494",
+"cwes": [
+"CWE-94"
+],
+"dateAdded": "2023-03-30",
+"dueDate": "2023-04-20",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://www.samba.org/samba/security/CVE-2017-7494.html; https://nvd.nist.gov/vuln/detail/CVE-2017-7494",
+"product": "Samba",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Samba contains a remote code execution vulnerability, allowing a malicious client to upload a shared library to a writable share and then cause the server to load and execute it.",
+"vendorProject": "Samba",
+"vulnerabilityName": "Samba Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2022-24706",
+"cwes": [
+"CWE-1188"
+],
+"dateAdded": "2022-08-25",
+"dueDate": "2022-09-15",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://lists.apache.org/thread/w24wo0h8nlctfps65txvk0oc5hdcnv00;  https://nvd.nist.gov/vuln/detail/CVE-2022-24706",
+"product": "CouchDB",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache CouchDB contains an insecure default initialization of resource vulnerability which can allow an attacker to escalate to administrative privileges.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache CouchDB Insecure Default Initialization of Resource Vulnerability"
+},
+{
+"cveID": "CVE-2022-22963",
+"cwes": [
+"CWE-94"
+],
+"dateAdded": "2022-08-25",
+"dueDate": "2022-09-15",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://tanzu.vmware.com/security/cve-2022-22963;  https://nvd.nist.gov/vuln/detail/CVE-2022-22963",
+"product": "Spring Cloud",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "When using routing functionality in VMware Tanzu's Spring Cloud Function, it is possible for a user to provide a specially crafted SpEL as a routing-expression that may result in remote code execution and access to local resources.",
+"vendorProject": "VMware Tanzu",
+"vulnerabilityName": "VMware Tanzu Spring Cloud Function Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2014-0160",
+"cwes": [
+"CWE-125"
+],
+"dateAdded": "2022-05-04",
+"dueDate": "2022-05-25",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2014-0160",
+"product": "OpenSSL",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "The TLS and DTLS implementations in OpenSSL do not properly handle Heartbeat Extension packets, which allows remote attackers to obtain sensitive information.",
+"vendorProject": "OpenSSL",
+"vulnerabilityName": "OpenSSL Information Disclosure Vulnerability"
+},
+{
+"cveID": "CVE-2022-22965",
+"cwes": [
+"CWE-94"
+],
+"dateAdded": "2022-04-04",
+"dueDate": "2022-04-25",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2022-22965",
+"product": "Spring Framework",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Spring MVC or Spring WebFlux application running on JDK 9+ may be vulnerable to remote code execution (RCE) via data binding.",
+"vendorProject": "VMware",
+"vulnerabilityName": "Spring Framework JDK 9+ Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2020-7247",
+"cwes": [
+"CWE-755",
+"CWE-78"
+],
+"dateAdded": "2022-03-25",
+"dueDate": "2022-04-15",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2020-7247",
+"product": "OpenSMTPD",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "smtp_mailaddr in smtp_session.c in OpenSMTPD, as used in OpenBSD and other products, allows remote attackers to execute arbitrary commands as root via a crafted SMTP session.",
+"vendorProject": "OpenBSD",
+"vulnerabilityName": "OpenSMTPD Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2015-1427",
+"cwes": [
+"CWE-284"
+],
+"dateAdded": "2022-03-25",
+"dueDate": "2022-04-15",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2015-1427",
+"product": "Elasticsearch",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "The Groovy scripting engine in Elasticsearch allows remote attackers to bypass the sandbox protection mechanism and execute arbitrary shell commands.",
+"vendorProject": "Elastic",
+"vulnerabilityName": "Elasticsearch Groovy Scripting Engine Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2020-1938",
+"cwes": [],
+"dateAdded": "2022-03-03",
+"dueDate": "2022-03-17",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2020-1938",
+"product": "Tomcat",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache Tomcat treats Apache JServ Protocol (AJP) connections as having higher trust than, for example, a similar HTTP connection. If such connections are available to an attacker, they can be exploited.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache Tomcat Improper Privilege Management Vulnerability"
+},
+{
+"cveID": "CVE-2017-10271",
+"cwes": [],
+"dateAdded": "2022-02-10",
+"dueDate": "2022-08-10",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2017-10271",
+"product": "WebLogic Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Oracle Corporation WebLogic Server contains a vulnerability that allows for remote code execution.",
+"vendorProject": "Oracle",
+"vulnerabilityName": "Oracle Corporation WebLogic Server Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2017-12149",
+"cwes": [
+"CWE-502"
+],
+"dateAdded": "2021-12-10",
+"dueDate": "2022-06-10",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2017-12149",
+"product": "JBoss Application Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "The JBoss Application Server, shipped with Red Hat Enterprise Application Platform 5.2, allows an attacker to execute arbitrary code via crafted serialized data.",
+"vendorProject": "Red Hat",
+"vulnerabilityName": "Red Hat JBoss Application Server Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2017-9805",
+"cwes": [
+"CWE-502"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2022-05-03",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2017-9805",
+"product": "Struts",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache Struts REST Plugin uses an XStreamHandler with an instance of XStream for deserialization without any type filtering, which can lead to remote code execution when deserializing XML payloads.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache Struts Deserialization of Untrusted Data Vulnerability"
+},
+{
+"cveID": "CVE-2021-42013",
+"cwes": [
+"CWE-22"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2021-11-17",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2021-42013",
+"product": "HTTP Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache HTTP Server contains a path traversal vulnerability that allows an attacker to perform remote code execution if files outside directories configured by Alias-like directives are not under default require all denied or if CGI scripts are enabled. This CVE ID resolves an incomplete patch for CVE-2021-41773.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache HTTP Server Path Traversal Vulnerability"
+},
+{
+"cveID": "CVE-2021-41773",
+"cwes": [
+"CWE-22"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2021-11-17",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2021-41773",
+"product": "HTTP Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache HTTP Server contains a path traversal vulnerability that allows an attacker to perform remote code execution if files outside directories configured by Alias-like directives are not under default \ufffdrequire all denied\ufffd or if CGI scripts are enabled. The original patch issued under this CVE ID is insufficient, please review remediation information under CVE-2021-42013.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache HTTP Server Path Traversal Vulnerability"
+},
+{
+"cveID": "CVE-2020-17530",
+"cwes": [
+"CWE-917"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2022-05-03",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2020-17530",
+"product": "Struts",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Forced Object-Graph Navigation Language (OGNL) evaluation in Apache Struts, when evaluated on raw user input in tag attributes, can lead to remote code execution.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache Struts Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2017-5638",
+"cwes": [
+"CWE-20"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2022-05-03",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2017-5638",
+"product": "Struts",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Apache Struts Jakarta Multipart parser allows for malicious file upload using the Content-Type value, leading to remote code execution.",
+"vendorProject": "Apache",
+"vulnerabilityName": "Apache Struts Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2018-7600",
+"cwes": [
+"CWE-20"
+],
+"dateAdded": "2021-11-03",
+"dueDate": "2022-05-03",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Known",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2018-7600",
+"product": "Drupal Core",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Drupal Core contains a remote code execution vulnerability that could allow an attacker to exploit multiple attack vectors on a Drupal site, resulting in complete site compromise.",
+"vendorProject": "Drupal",
+"vulnerabilityName": "Drupal Core Remote Code Execution Vulnerability"
+},
+{
+"cveID": "CVE-2020-14882",
+"cwes": [],
+"dateAdded": "2021-11-03",
+"dueDate": "2022-05-03",
+"forensicTriage": "No",
+"knownRansomwareCampaignUse": "Unknown",
+"notes": "https://nvd.nist.gov/vuln/detail/CVE-2020-14882",
+"product": "WebLogic Server",
+"requiredAction": "Apply updates per vendor instructions.",
+"shortDescription": "Oracle WebLogic Server contains an unspecified vulnerability, which is assessed to allow for remote code execution, based on this vulnerability being related to CVE-2020-14750.",
+"vendorProject": "Oracle",
+"vulnerabilityName": "Oracle WebLogic Server Remote Code Execution Vulnerability"
+}
+]
+}

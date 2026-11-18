@@ -1,0 +1,171 @@
+# Product map: probe product key -> NVD vendor:product names, and CNA (vendor, product) alias pairs.
+#
+# Trimmed to the keys a probe passes to check_cves (edge-node 3205d18). Keys no probe passes
+# (struts2, spring_framework, spring_cloud_function, django, laravel_ignition, libvncserver) keep
+# their curated overlay rows only; the generated feeds add nothing for them in v1.
+#
+# nvd:  "vendor:product" as in the CPE name, unescaped (NVD writes joomla\! and erlang\/otp).
+# cna:  case-folded EXACT (vendor, product) pairs of CVE List V5 `affected[]`. A CNA record reaches
+#       a product only through a pair listed here (no fuzzy matching). The CPE names under `nvd`
+#       also count as CNA pairs. Distro vendors (Red Hat, Ubuntu, Debian) are left out on purpose:
+#       their version ranges are package revisions. Every pair below was seen in the 2026-11-13 prototype
+#       and is a reviewed alias.
+# overlay_only: no generated rows in v1.
+#
+# Checked against NVD cpe_match hits (report 6, 2026-11-13): the zero-hit names microsoft:iis,
+# opencontainers:runc, redhat:cockpit and streamlit:streamlit are dropped. Their products are not
+# probe keys and stay out until a probe passes them. Cockpit, when added, is cockpit-project:cockpit;
+# `cockpit-hq` / `agentejo:cockpit` is Cockpit CMS, a different product. NGINX Plus, MySQL Cluster,
+# Oracle HTTP Server and Tomcat Native are excluded (owner, 2026-11-14).
+
+# rules.component_products: a CVE of such a product (OpenSSL) is not carried to other products' NVD rows,
+# since a server banner does not say which OpenSSL it bundles. Curated pairs and KEV CVEs are kept.
+[rules]
+component_products = ["openssl"]
+
+# supersede.pairs: (product, CVE) whose curated rows are partial. The generated rows replace them when the
+# feed has any row for the pair, else the curated rows stay. The overlay file is unchanged.
+[supersede]
+pairs = [["apache", "CVE-2017-9798"], ["openssh", "CVE-2016-6210"], ["mysql", "CVE-2016-6664"], ["jetty", "CVE-2023-36478"],
+         ["samba", "CVE-2023-3961"], ["postfix", "CVE-2023-51764"], ["elasticsearch", "CVE-2024-23450"]]
+
+[products.apache]
+nvd = ["apache:http_server"]
+cna = [["apache software foundation", "apache http server"], ["apache", "apache http server"]]
+
+[products.asterisk]
+# certified_asterisk is excluded: its "-certN" versions do not parse.
+nvd = ["digium:asterisk", "sangoma:asterisk", "asterisk:asterisk"]
+cna = []
+
+[products.bind]
+nvd = ["isc:bind"]
+cna = [["isc", "bind 9"], ["isc", "bind9"], ["isc", "bind"], ["isc", "bind 9 supported preview edition"]]
+
+[products.couchdb]
+nvd = ["apache:couchdb"]
+cna = [["apache software foundation", "apache couchdb"], ["n/a", "apache couchdb"]]
+
+[products.dropbear]
+nvd = ["dropbear_ssh_project:dropbear_ssh"]
+cna = [["dropbear ssh project", "dropbear ssh"]]
+
+[products.drupal]
+nvd = ["drupal:drupal"]
+cna = [["drupal", "drupal"], ["drupal.org", "drupal"], ["n/a", "drupal"]]
+
+[products.elasticsearch]
+nvd = ["elastic:elasticsearch", "elasticsearch:elasticsearch"]
+cna = [["elastic", "elasticsearch"]]
+
+[products.erlang_ssh]
+# Generated OTP-numbered rows would match ssh-app 5.x banners: overlay only in v1.
+overlay_only = true
+
+[products.exim]
+nvd = ["exim:exim"]
+cna = [["exim", "exim"], ["unspecified", "exim"]]
+
+[products.influxdb]
+nvd = ["influxdata:influxdb"]
+cna = []
+
+[products.jboss]
+nvd = ["redhat:jboss_enterprise_application_platform", "redhat:jboss_application_server"]
+cna = [["red hat", "red hat jboss enterprise application platform"], ["red hat", "jboss enterprise application platform"],
+       ["n/a", "jboss enterprise application platform"], ["red hat, inc.", "jboss enterprise application platform"],
+       ["red hat, inc.", "red hat jboss enterprise application platform"]]
+
+[products.jetty]
+nvd = ["eclipse:jetty", "mortbay:jetty"]
+cna = [["the eclipse foundation", "eclipse jetty"], ["eclipse foundation", "eclipse jetty"], ["eclipse foundation", "jetty"],
+       ["eclipse jetty", "eclipse jetty"], ["eclipse jetty", "jetty"]]
+
+[products.joomla]
+nvd = ["joomla:joomla!"]
+cna = [["joomla! project", "joomla! cms"], ["joomla!", "joomla!"], ["n/a", "joomla"]]
+
+[products.libssh]
+nvd = ["libssh:libssh"]
+cna = [["n/a", "libssh"], ["libssh", "libssh"], ["[unknown]", "libssh"]]
+
+[products.mariadb]
+nvd = ["mariadb:mariadb"]
+cna = [["mariadb", "mariadb"], ["mariadb foundation", "mariadb server"], ["n/a", "mariadb"]]
+
+[products.memcached]
+nvd = ["memcached:memcached"]
+cna = [["memcached", "memcached"], ["n/a", "memcached"]]
+
+[products.mongodb]
+nvd = ["mongodb:mongodb"]
+cna = [["mongodb", "mongodb server"], ["mongodb inc", "mongodb server"], ["mongodb inc.", "mongodb server"],
+       ["mongodb, inc.", "mongodb server"], ["mongodb", "mongodb"]]
+
+[products.mysql]
+nvd = ["oracle:mysql", "oracle:mysql_server", "mysql:mysql"]
+cna = [["oracle corporation", "mysql server"], ["oracle", "mysql server"]]
+
+[products.nginx]
+# f5:nginx_plus (R-numbered) is excluded; norm_ver also drops R-numbers.
+nvd = ["f5:nginx", "nginx:nginx", "f5:nginx_open_source"]
+cna = [["f5", "nginx open source"], ["f5", "nginx"], ["nginx", "nginx"]]
+
+[products.opensmtpd]
+nvd = ["openbsd:opensmtpd", "opensmtpd:opensmtpd"]
+cna = []
+
+[products.openssh]
+nvd = ["openbsd:openssh"]
+cna = [["openbsd", "openssh"]]
+
+[products.openssl]
+nvd = ["openssl:openssl"]
+cna = [["openssl", "openssl"], ["openssl software foundation", "openssl"], ["the openssl project", "openssl"]]
+
+[products.postfix]
+nvd = ["postfix:postfix"]
+cna = [["postfix", "postfix"]]
+
+[products.postgresql]
+nvd = ["postgresql:postgresql"]
+cna = [["n/a", "postgresql"], ["postgresql global development group", "postgresql"], ["postgresql", "postgresql"],
+       ["the postgresql global development group", "postgresql"], ["postgresql project", "postgresql"],
+       ["[unknown]", "postgresql"], ["the postgresql project", "postgresql"], ["unspecified", "postgresql"]]
+
+[products.powerdns]
+nvd = ["powerdns:authoritative_server", "powerdns:recursor", "powerdns:authoritative", "powerdns:powerdns"]
+cna = [["powerdns", "recursor"], ["powerdns", "authoritative"], ["powerdns", "powerdns recursor"], ["powerdns", "powerdns"],
+       ["powerdns", "powerdns authoritative"], ["powerdns", "powerdns authoritative server"]]
+
+[products.proftpd]
+nvd = ["proftpd:proftpd"]
+cna = [["proftpd", "proftpd"], ["proftpd project", "proftpd"], ["proftpd project", "proftpd (professional ftp daemon)"]]
+
+[products.redis]
+nvd = ["redis:redis", "redislabs:redis"]
+cna = [["redis", "redis"], ["redis labs", "redis"], ["n/a", "redis"], ["[unknown]", "redis"], ["unspecified", "redis"]]
+
+[products.samba]
+nvd = ["samba:samba"]
+cna = [["n/a", "samba"], ["samba", "samba"], ["[unknown]", "samba"], ["the samba team", "samba"], ["the samba project", "samba"]]
+
+[products.tightvnc]
+nvd = ["tightvnc:tightvnc"]
+cna = []
+
+[products.tomcat]
+nvd = ["apache:tomcat"]
+cna = [["apache software foundation", "apache tomcat"], ["n/a", "apache tomcat"], ["apache", "apache tomcat"], ["apache", "tomcat"]]
+
+[products.vsftpd]
+nvd = ["beasts:vsftpd", "vsftpd_project:vsftpd"]
+cna = [["vsftpd", "vsftpd"]]
+
+[products.weblogic]
+nvd = ["oracle:weblogic_server"]
+cna = [["oracle corporation", "weblogic server"], ["oracle corporation", "oracle weblogic server"], ["oracle", "weblogic server"]]
+
+[products.wordpress]
+nvd = ["wordpress:wordpress"]
+cna = [["wordpress", "wordpress"], ["wordpress foundation", "wordpress"], ["wordpress.org", "wordpress"], ["n/a", "wordpress"]]
