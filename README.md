@@ -73,7 +73,7 @@ the installed package version with `fixed_version`. Without `distro_map.toml` th
 
 ## Release workflow
 
-`.github/workflows/build.yml` runs weekly and on dispatch. `build` fetches the feeds, builds against the baseline (the newest
+`.github/workflows/build.yml` runs weekly, on every merge to `main` that changes the builder or its data, and on dispatch. `build` fetches the feeds, builds against the baseline (the newest
 published, non-prerelease `vulndb-*` release), gates, compresses and writes the manifest. `publish` runs on `main` only, in the
 `release` environment: it re-checks the zst sha256 and the gate results, then by release state: published, skip; draft,
 re-upload with `--clobber` and publish; absent, draft, upload, publish. A failed or cancelled run opens one `build-failure`
