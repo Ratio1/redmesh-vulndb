@@ -5,6 +5,13 @@ name: build
 on:
   schedule:
     - cron: "17 4 * * 1"  # Mondays, odd minute
+  # A merge to main that changes the builder or its data publishes a release; same inputs publish nothing new.
+  push:
+    branches: [main]
+    paths-ignore:
+      - "README.md"
+      - "tests/**"
+      - ".gitignore"
   workflow_dispatch:
 
 permissions:
