@@ -178,3 +178,35 @@ def test_all_configured_supersede_pairs_supersede_in_real_data_shape():
   assert set(real) == pairs and build.superseded_pairs(pairs, affected) == pairs
   exact_only = {("apache", "CVE-2017-9798", "==2.4.0"): ["nvd"]}
   assert build.superseded_pairs(pairs, exact_only) == set()
+
+
+@pytest.mark.parametrize("desc, hit", [
+  ("Apache for Win32 before 1.3.24, and 2.0.x before 2.0.34-beta, allows remote attackers", True),
+  ("The rotatelogs program on Apache before 1.3.28, for Windows and OS/2 systems, does not", True),
+  ("Apache 2.0 through 2.0.39 on Windows, OS2, and Netware allows remote attackers", True),
+  ("Apache before 2.0.44, when running on unpatched Windows 9x and Me operating systems", True),
+  ("Unknown vulnerability in filestat.c for Apache running on OS2, versions 2.0 through 2.0.45", True),
+  ("Apache 1.3.29 and earlier, and Apache 2.0.48 and earlier, when running on Cygwin", True),
+  ("Apache HTTP Server, when running on Linux with a document root on a Windows share mounted", False),
+  ("Apache HTTP Server: DoS in HTTP/2 with initial windows size 0", False),
+])
+def test_non_unix_platform_rule_reads_the_nvd_description(desc, hit):
+  # Old Apache CVEs carry no NVD platform node; the builder flags their rows platform_dependent from this rule.
+  assert bool(build._NON_UNIX_PLATFORM.search(desc)) is hit
+
+
+def test_builder_flags_an_apache_row_from_its_description(monkeypatch, tmp_path):
+  # The fixture's one Apache NVD CVE, given a Win32 description and no platform node, must come out flagged.
+  real = build.nvd.ingest
+  def ingest(*a, **k):
+    recs = real(*a, **k)
+    r = recs["CVE-2001-0766"]
+    r["description"] = "Apache for Win32 before 1.3.24 allows remote attackers to execute commands."
+    r["rows"] = [(p, c, kind, 0) for p, c, kind, _ in r["rows"]]
+    return recs
+  monkeypatch.setattr(build.nvd, "ingest", ingest)
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None)
+  rows = sqlite3.connect(out).execute("SELECT platform_dependent FROM affected WHERE cve_id='CVE-2001-0766'").fetchall()
+  assert rows and all(pd == 1 for (pd,) in rows)
+

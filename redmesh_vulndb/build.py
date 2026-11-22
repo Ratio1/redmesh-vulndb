@@ -55,6 +55,8 @@ VECTOR = re.compile(r"[A-Za-z]{1,3}:[A-Za-z]{1,6}(/[A-Za-z]{1,3}:[A-Za-z]{1,6})*
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
 
+_NON_UNIX_PLATFORM = re.compile(r"\b(?:on|for)\s+(?:unpatched\s+)?(?:Microsoft\s+)?(?:Windows|Win32|WinNT|OS/?2|NetWare|Cygwin)\b", re.I)
+
 def band(score):
   """Severity band of a CVSS score; UNKNOWN without one."""
   return "UNKNOWN" if score is None else "CRITICAL" if score >= 9 else "HIGH" if score >= 7 else "MEDIUM" if score >= 4 else "LOW" if score > 0 else "INFO"
@@ -184,7 +186,11 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
 
   nvd_pairs = set()
   for cve, r in nrecs.items():
+    # NVD gives old Apache CVEs no platform node; their description names the platform. An upstream-build
+    # banner makes Apache rows firm (edge RM-204), so a Windows/OS2/NetWare/Cygwin-only row must stay tentative.
+    windows_only = bool(_NON_UNIX_PLATFORM.search(r.get("description") or ""))
     for prod, cons, kind, pdep in r["rows"]:
+      pdep = 1 if prod == "apache" and windows_only else pdep
       nvd_pairs.add((prod, cve))
       reason = "nvd_override" if r["layer"] == "override" else "nvd_range" if kind == "range" else "nvd_exact"
       add(prod, cve, cons, "nvd", "firm" if kind == "range" else "tentative", reason, pdep)  # override rows: NVD source, same CPE format
