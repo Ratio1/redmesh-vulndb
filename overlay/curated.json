@@ -1,5 +1,5 @@
 {
- "row_count": 374,
+ "row_count": 378,
  "rows": [
   {
    "client_side": 0,
@@ -336,7 +336,7 @@
   },
   {
    "client_side": 0,
-   "constraint": ">=2.4.49,<2.4.51",
+   "constraint": ">=2.4.49,<2.4.50",
    "cve_id": "CVE-2021-41773",
    "cwe": "CWE-22",
    "product": "apache",
@@ -517,6 +517,16 @@
   {
    "client_side": 0,
    "constraint": ">=2.4.0,<2.4.60",
+   "cve_id": "CVE-2024-38472",
+   "cwe": "CWE-918",
+   "platform_dependent": 1,
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Windows UNC SSRF (NTLM hash leak)"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.60",
    "cve_id": "CVE-2024-38474",
    "cwe": "CWE-116",
    "product": "apache",
@@ -552,21 +562,50 @@
   },
   {
    "client_side": 0,
-   "constraint": ">=2.4.0,<2.4.62",
+   "constraint": ">=2.4.60,<2.4.62",
    "cve_id": "CVE-2024-40725",
-   "cwe": "CWE-444",
+   "cwe": "CWE-668",
    "product": "apache",
    "severity": "MEDIUM",
-   "title": "HTTP request smuggling via mod_proxy"
+   "title": "Source code disclosure with handlers configured via AddType"
   },
   {
    "client_side": 0,
-   "constraint": "<2.4.62",
-   "cve_id": "CVE-2024-40898",
+   "constraint": ">=2.4.0,<2.4.66",
+   "cve_id": "CVE-2025-59775",
    "cwe": "CWE-918",
+   "platform_dependent": 1,
    "product": "apache",
    "severity": "HIGH",
-   "title": "Windows mod_rewrite SSRF"
+   "title": "Windows NTLM leakage through UNC SSRF"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.60,<2.4.69",
+   "cve_id": "CVE-2026-42356",
+   "cwe": "CWE-430",
+   "product": "apache",
+   "severity": "LOW",
+   "title": "Limited RCE for some internal redirects to non-CGI files in CGI directories"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.68,<2.4.69",
+   "cve_id": "CVE-2026-56449",
+   "cwe": "CWE-787",
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "mod_proxy_html crash in dump_content"
+  },
+  {
+   "client_side": 0,
+   "constraint": ">=2.4.0,<2.4.69",
+   "cve_id": "CVE-2026-59685",
+   "cwe": "CWE-787",
+   "platform_dependent": 1,
+   "product": "apache",
+   "severity": "HIGH",
+   "title": "Windows ap_directory_walk() out-of-bounds write"
   },
   {
    "client_side": 0,

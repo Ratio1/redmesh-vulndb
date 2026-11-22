@@ -208,7 +208,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
   for r in overlay_rows:
     if (r["product"], r["cve_id"]) in superseded:
       continue
-    add(r["product"], r["cve_id"], r["constraint"], "curated", "firm", "curated", 0, r["client_side"])
+    add(r["product"], r["cve_id"], r["constraint"], "curated", "firm", "curated", r.get("platform_dependent", 0), r["client_side"])
   client_cves = {r["cve_id"] for r in overlay_rows if r["client_side"]}
   for (prod, cve, cons), row in affected.items():
     if cve in client_cves:
