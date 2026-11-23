@@ -50,8 +50,12 @@ the checkout of the package, else the working directory.
 ## Rules in short
 
 - NVD ranges for the mapped products, with the anchore overrides layered on CVEs NVD has not analysed. CNA ranges only for a
-  (product, CVE) pair NVD has no row for, reached through exact case-folded vendor/product alias pairs. The curated overlay
-  wins per pair. Open-ended ranges are dropped. An exact row is kept only for `^\d+(\.\d+)*[a-z]?$` or a BIND `-S`/`-P` form;
+  (product, CVE) pair NVD has no row for, reached through exact case-folded vendor/product alias pairs. An NVD or override
+  range with no lower bound, or a lower one, takes the lowest floor of the pair's structured CNA rows, open-ended ones
+  (`X lessThan *`) included as floors only, never as rows (none if any of them has no floor). A floorless `<=X` or `<X`
+  range otherwise takes the pair's lowest NVD exact row when that is a branch start (`X.Y`, `X.Y.0`) and every exact row is
+  on X's branch at or below X. Upper bounds never change, and a floor is never raised onto a row the pair has. The curated
+  overlay wins per pair. Open-ended ranges give no row. An exact row is kept only for `^\d+(\.\d+)*[a-z]?$` or a BIND `-S`/`-P` form;
   pre-releases and odd suffixes (`sp1`, `gamma`, `7.x-1.0`) are dropped. A rejected CVE that has rows becomes a `REJECTED`
   tombstone. `mysql` is not a letter-release product. `vuln.severity` is the overlay severity, else the band of the display score.
   Display CVSS order: CNA v3, NVD v3, ADP v3, then v4.
