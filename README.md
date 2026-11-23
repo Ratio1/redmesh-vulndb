@@ -63,10 +63,11 @@ the checkout of the package, else the working directory.
 Licence: the published database contains Canonical CVE OVAL data and is distributed under CC BY-SA 4.0 (see `THIRD_PARTY_DATA_NOTICES`).
 
 One row per distro release, source package and CVE: `status` is `fixed` (with the full package version in `fixed_version`),
-`not_affected` or `open`. Sources: Canonical CVE OVAL (focal, jammy, noble; `ubuntu_oval`) and the Debian Security Tracker
+`not_affected` or `open`. Sources: Canonical CVE OVAL (trusty, focal, jammy, noble; `ubuntu_oval`) and the Debian Security Tracker
 JSON (bookworm, trixie; `debian_tracker`; bullseye is no longer in the tracker). Only products of `distro_map.toml` and only
 CVEs that already have an `affected` row for the product. Ubuntu: a CVE definition that does not list the package is
-`not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro) is `open`. Debian: `resolved`
+`not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro: `esm-*/<release>` or `<release>/esm`) is `open`, which assumes a host
+without Pro. Debian: `resolved`
 at version `0` is `not_affected`. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
 release with no rows (also when the sources are missing from the cache) or a wrong golden fact; the build fails on an OVAL phrase it does not understand. A row says what the distribution did, not what a host runs: the reader compares
 the installed package version with `fixed_version`. Without `distro_map.toml` the table is empty and the gate does not run.

@@ -118,6 +118,18 @@ def test_ubuntu_three_statuses_absent_package_and_pockets(distro_cache, distro_r
   assert {k[3] for k in got if k[0] == "ubuntu"} == {"CVE-2002-0083", "CVE-2002-0639", "CVE-2006-5051", "CVE-2009-1955", "CVE-2004-0747", "CVE-2001-0766"}
 
 
+def test_parse_oval_counts_trusty_esm_pocket_as_esm(tmp_path):
+  path = tmp_path / "t.oval.xml.bz2"
+  oval(path, "trusty", [
+    vuln("CVE-2020-35452", "apache2 source package in trusty/esm, is affected and has been fixed (note: '2.4.7-1ubuntu4.22+esm1')."),
+    vuln("CVE-2014-0002", "apache2 source package in trusty/other, might be affected and may need fixing."),  # unknown pocket
+  ])
+  wanted = {"CVE-2020-35452", "CVE-2014-0002"}
+  defined, main, esm, seen = distro.parse_oval(path, "trusty", lambda p: "apache" if p == "apache2" else None, wanted, Counter())
+  assert defined == wanted and seen == {"apache2"} and main == {}
+  assert esm == {("CVE-2020-35452", "apache2")}
+
+
 def test_debian_statuses_and_missing_entries(distro_cache, distro_root, tmp_path):
   out = tmp_path / "o.sqlite"
   build.build(distro_cache, out, root=distro_root, log=lambda *_: None)
@@ -251,5 +263,5 @@ def test_fetch_lists_the_distro_sources(tmp_path, monkeypatch):
     (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
     (tmp_path / rel).touch()
   fetch.fetch(tmp_path, log=lambda *_: None)
-  assert seen == [f"https://security-metadata.canonical.com/oval/com.ubuntu.{r}.cve.oval.xml.bz2" for r in ("focal", "jammy", "noble")] + [
+  assert seen == [f"https://security-metadata.canonical.com/oval/com.ubuntu.{r}.cve.oval.xml.bz2" for r in ("trusty", "focal", "jammy", "noble")] + [
     "https://security-tracker.debian.org/tracker/data/json"]

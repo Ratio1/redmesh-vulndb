@@ -11,7 +11,7 @@
 #   fact means the source or the parser changed meaning, and a person must look. `fixed_version` is optional.
 
 [ubuntu]
-releases = ["focal", "jammy", "noble"]
+releases = ["trusty", "focal", "jammy", "noble"]
 
 [debian]
 releases = ["bookworm", "trixie"]
@@ -76,3 +76,25 @@ package = "openssh"
 cve_id = "CVE-2023-48795"
 status = "fixed"
 fixed_version = "1:9.2p1-2+deb12u2"
+
+[[golden]]
+distro = "ubuntu"
+release = "trusty"
+package = "apache2"
+cve_id = "CVE-2013-5704"
+status = "fixed"
+fixed_version = "2.4.7-1ubuntu4.4"
+
+[[golden]]
+distro = "ubuntu"
+release = "trusty"
+package = "apache2"
+cve_id = "CVE-2020-35452"
+status = "open"
+
+[[golden]]
+distro = "ubuntu"
+release = "trusty"
+package = "apache2"
+cve_id = "CVE-2020-11984"
+status = "not_affected"

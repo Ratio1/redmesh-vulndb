@@ -32,7 +32,7 @@ OVERRIDES_API = "https://api.github.com/repos/anchore/nvd-data-overrides/commits
 OVERRIDES_ZIP = "https://codeload.github.com/anchore/nvd-data-overrides/zip/"
 OVAL_URL = "https://security-metadata.canonical.com/oval/com.ubuntu.{}.cve.oval.xml.bz2"
 DEBIAN_URL = "https://security-tracker.debian.org/tracker/data/json"
-UBUNTU_RELEASES = ("focal", "jammy", "noble")  # the releases of distro_map.toml
+UBUNTU_RELEASES = ("trusty", "focal", "jammy", "noble")  # the releases of distro_map.toml
 KINDS = {"nvd": "*.json.gz", "overrides": "*.zip", "cvelist": "*.zip", "kev": "*.json", "epss": "*.csv.gz",
          "oval": "*.xml.bz2", "debian": "*.json"}
 

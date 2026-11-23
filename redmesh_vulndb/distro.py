@@ -7,7 +7,7 @@ Sources (both optional in the cache; `distro_map.toml` names the releases and th
 Row rules. Only (product, CVE) pairs the build already has an `affected` row for get a row.
   Ubuntu: a CVE definition exists for the release. A source package listed in the release pocket as "has been fixed
     (note: 'V')" is `fixed` V; listed as "might be affected" is `open`. A package only listed in an ESM pocket
-    (esm-infra, esm-apps: Ubuntu Pro) is `open` with no version: a host without Pro is not fixed. A package of the
+    (esm-infra, esm-apps, trusty/esm: Ubuntu Pro) is `open` with no version: a host without Pro is not fixed. A package of the
     product that the release carries (it appears in some definition) but this definition does not list is
     `not_affected`. No definition for the CVE: no row (unknown).
   Debian: `resolved` with fixed_version "0" is `not_affected`, `resolved` with a version is `fixed`, `open` and
@@ -71,7 +71,7 @@ def parse_oval(path, release, product_of, wanted, stats):
             pkg, pocket, rest = m.groups()
             if pocket == release:
               esm_only = False
-            elif pocket.startswith("esm-") and pocket.endswith("/" + release):
+            elif pocket == release + "/esm" or (pocket.startswith("esm-") and pocket.endswith("/" + release)):  # trusty: "trusty/esm"
               esm_only = True
             else:
               continue
