@@ -166,7 +166,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
   `baseline_cves`: every CVE id of the previous build. One that a feed now rejects becomes a tombstone even
   with no rows left, so it stays visible as REJECTED instead of silently vanishing."""
   manifest = fetch.verify(cache)
-  inp = fetch.inputs(cache, fetch.selected(cache, manifest))  # exactly the files the manifest names
+  inp = fetch.inputs(cache, fetch.selected(cache, manifest), fetch.has_elts(manifest))  # exactly the files the manifest names
   vp2prod = cfg["vp2prod"]
   overrides = nvd.load_overrides(inp["overrides"][-1], vp2prod, stats) if inp["overrides"] else {}
   nrecs = nvd.ingest(inp["nvd"], vp2prod, overrides, stats)
@@ -279,7 +279,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     "overlay_source_commit": cfg["overlay"]["source_commit"],
     "overlay_row_count": str(cfg["overlay"]["row_count"]),
   }
-  for kind in ("oval", "debian"):  # a distro source has no release tag: its snapshot is a hash of its input hashes
+  for kind in ("oval", "debian", "elts"):  # a distro source has no release tag: its snapshot is a hash of its input hashes
     if inp[kind] and "distro_fix" in tables:
       snapshot[f"snapshot_{kind}"] = sha256_bytes("".join(f"{k}:{manifest['inputs'][k]['sha256']}\n" for k in sorted(manifest["inputs"])
                                                          if k.startswith(kind + "/")).encode())[:16]

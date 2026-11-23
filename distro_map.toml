@@ -16,6 +16,11 @@ releases = ["trusty", "focal", "jammy", "noble"]
 [debian]
 releases = ["bookworm", "trixie"]
 
+# [debian_elts].releases: suites read from the Freexian ELTS tracker JSON, only in a build run with `--elts` (local or canary;
+#   never a release build: no licence, see RM-240). Must not overlap [debian].releases: a release takes one Debian source.
+[debian_elts]
+releases = ["buster", "bullseye"]
+
 [packages]
 apache = ["apache2"]
 bind = ["bind9"]
@@ -98,3 +103,30 @@ release = "trusty"
 package = "apache2"
 cve_id = "CVE-2020-11984"
 status = "not_affected"
+
+# Facts of the opt-in Freexian ELTS source (`elts = true`): checked only in a build that includes it (2026-11-23).
+[[golden]]
+elts = true
+distro = "debian"
+release = "buster"
+package = "apache2"
+cve_id = "CVE-2019-17567"
+status = "fixed"
+fixed_version = "2.4.59-1~deb10u1"
+
+[[golden]]
+elts = true
+distro = "debian"
+release = "buster"
+package = "apache2"
+cve_id = "CVE-2024-38472"
+status = "not_affected"
+
+[[golden]]
+elts = true
+distro = "debian"
+release = "bullseye"
+package = "apache2"
+cve_id = "CVE-2026-59685"
+status = "fixed"
+fixed_version = "2.4.71-1~deb11u1"

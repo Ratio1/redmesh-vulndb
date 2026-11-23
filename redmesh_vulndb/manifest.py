@@ -6,15 +6,17 @@ Flags are reported, never blocking.
 """
 import datetime
 import json
+import os
 import sqlite3
 from pathlib import Path
 
 from . import fetch
 
 SCHEMA = 1
+ELTS_RELEASE_ENV = "REDMESH_VULNDB_ALLOW_ELTS_RELEASE"  # explicit override: Freexian permission recorded
 # input folder -> the db `meta` key that names its snapshot
 SNAPSHOT_KEY = {"nvd": "snapshot_nvd", "cvelist": "snapshot_cvelist", "overrides": "snapshot_nvd_overrides",
-                "kev": "snapshot_kev", "epss": "snapshot_epss", "oval": "snapshot_oval", "debian": "snapshot_debian"}
+                "kev": "snapshot_kev", "epss": "snapshot_epss", "oval": "snapshot_oval", "debian": "snapshot_debian", "elts": "snapshot_elts"}
 
 
 def grype_crosscheck(grype_db):
@@ -50,6 +52,9 @@ def make(db, zst, cache, built_at=None, spike_pct=25, spike_floor=20, grype_db=N
   meta = dict(con.execute("SELECT k, v FROM meta"))
   con.close()
   cache_manifest = fetch.verify(cache)
+  if (fetch.has_elts(cache_manifest) or "snapshot_elts" in meta) and os.environ.get(ELTS_RELEASE_ENV) != "1":
+    raise ValueError(f"refusing a manifest: the build includes the Freexian ELTS source, which has no licence for release; "
+                     f"set {ELTS_RELEASE_ENV}=1 only once Freexian's written permission is recorded")
   inputs = []
   for name in sorted(cache_manifest["inputs"]):
     entry = {"name": name, "sha256": cache_manifest["inputs"][name]["sha256"], "bytes": cache_manifest["inputs"][name]["bytes"]}

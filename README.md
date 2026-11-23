@@ -68,7 +68,8 @@ JSON (bookworm, trixie; `debian_tracker`; bullseye is no longer in the tracker).
 CVEs that already have an `affected` row for the product. Ubuntu: a CVE definition that does not list the package is
 `not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro: `esm-*/<release>` or `<release>/esm`) is `open`, which assumes a host
 without Pro. Debian: `resolved`
-at version `0` is `not_affected`. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
+at version `0` is `not_affected`. Opt-in, never in a release build (no licence): `fetch --elts` / `build --elts` add the Freexian ELTS tracker JSON (`debian_elts_tracker`) for
+buster and bullseye (`[debian_elts]`); a release takes rows from one Debian JSON only, and the golden facts marked `elts = true` apply only then. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
 release with no rows (also when the sources are missing from the cache) or a wrong golden fact; the build fails on an OVAL phrase it does not understand. A row says what the distribution did, not what a host runs: the reader compares
 the installed package version with `fixed_version`. Without `distro_map.toml` the table is empty and the gate does not run.
 

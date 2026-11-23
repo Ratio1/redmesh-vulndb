@@ -8,6 +8,7 @@ Layout of the cache:
   epss/epss_scores-current.csv.gz                                  FIRST EPSS daily CSV (header has the model version)
   oval/com.ubuntu.<codename>.cve.oval.xml.bz2                      Canonical CVE OVAL per Ubuntu release (optional: distro_fix)
   debian/security-tracker.json                                     Debian Security Tracker JSON (optional: distro_fix)
+  elts/elts-tracker.json                                           Freexian ELTS tracker JSON (opt-in, `--elts`: never in a release build)
   manifest.json                                                    {"inputs": {path: {sha256, bytes, url}}, "sources": {...}}
 `sources.cvelist` / `sources.overrides` name the one file of their folder that the build reads ({"file", "release"|"commit"});
 `fetch --refresh` deletes the superseded ones. `build --offline` reads only the manifest's files and refuses a
@@ -32,9 +33,10 @@ OVERRIDES_API = "https://api.github.com/repos/anchore/nvd-data-overrides/commits
 OVERRIDES_ZIP = "https://codeload.github.com/anchore/nvd-data-overrides/zip/"
 OVAL_URL = "https://security-metadata.canonical.com/oval/com.ubuntu.{}.cve.oval.xml.bz2"
 DEBIAN_URL = "https://security-tracker.debian.org/tracker/data/json"
+ELTS_URL = "https://deb.freexian.com/extended-lts/tracker/data/json"
 UBUNTU_RELEASES = ("trusty", "focal", "jammy", "noble")  # the releases of distro_map.toml
 KINDS = {"nvd": "*.json.gz", "overrides": "*.zip", "cvelist": "*.zip", "kev": "*.json", "epss": "*.csv.gz",
-         "oval": "*.xml.bz2", "debian": "*.json"}
+         "oval": "*.xml.bz2", "debian": "*.json", "elts": "*.json"}
 
 
 def sha256_file(path):
@@ -100,10 +102,15 @@ def selected(cache, manifest):
   return out
 
 
-def inputs(cache, sel=None):
-  """Cache layout to {kind: [paths]}, each sorted; `sel` (from `selected`) pins cvelist and overrides to one file."""
+def has_elts(manifest):
+  return any(k.startswith("elts/") for k in manifest.get("inputs", {}))
+
+
+def inputs(cache, sel=None, elts=False):
+  """Cache layout to {kind: [paths]}, each sorted; `sel` (from `selected`) pins cvelist and overrides to one file.
+  A file in elts/ counts only with `elts` (the manifest names it): the Freexian source is opt-in."""
   cache = Path(cache)
-  found = {k: sorted(cache.glob(f"{k}/{pat}")) for k, pat in KINDS.items()}
+  found = {k: sorted(cache.glob(f"{k}/{pat}")) if k != "elts" or elts else [] for k, pat in KINDS.items()}
   for kind, path in (sel or {}).items():
     if not path.exists():
       raise FileNotFoundError(f"manifest names {path}, which is missing")
@@ -114,7 +121,7 @@ def inputs(cache, sel=None):
   return found
 
 
-def write_manifest(cache, extra_sources=None, urls=None):
+def write_manifest(cache, extra_sources=None, urls=None, elts=False):
   """Hash every input in the layout and write manifest.json. Returns the manifest."""
   cache = Path(cache)
   old = {}
@@ -131,7 +138,7 @@ def write_manifest(cache, extra_sources=None, urls=None):
       sources[kind] = {"file": str(files[0].relative_to(cache))}
     else:
       sources.pop(kind, None)
-  found = inputs(cache, selected(cache, {"sources": sources}))
+  found = inputs(cache, selected(cache, {"sources": sources}), elts)
   entries = {}
   for paths in found.values():
     for p in paths:
@@ -147,7 +154,7 @@ def verify(cache):
   """Return the manifest after checking every input against its recorded sha256."""
   cache = Path(cache)
   manifest = json.loads((cache / "manifest.json").read_text())
-  found = inputs(cache, selected(cache, manifest))
+  found = inputs(cache, selected(cache, manifest), has_elts(manifest))
   rels = {str(p.relative_to(cache)) for paths in found.values() for p in paths}
   if rels != set(manifest["inputs"]):
     raise ValueError(f"cache files differ from manifest: {sorted(rels ^ set(manifest['inputs']))}")
@@ -164,8 +171,8 @@ def _prune(cache, keep):
       p.unlink()
 
 
-def fetch(cache, refresh=False, log=print):
-  """Download what the cache lacks (everything with refresh), then write the manifest."""
+def fetch(cache, refresh=False, log=print, elts=False):
+  """Download what the cache lacks (everything with refresh), then write the manifest. `elts` adds the Freexian source."""
   cache = Path(cache)
   urls, sources = {}, {}
 
@@ -184,6 +191,8 @@ def fetch(cache, refresh=False, log=print):
   for rel_name in UBUNTU_RELEASES:
     get(f"oval/com.ubuntu.{rel_name}.cve.oval.xml.bz2", OVAL_URL.format(rel_name))
   get("debian/security-tracker.json", DEBIAN_URL)
+  if elts:
+    get("elts/elts-tracker.json", ELTS_URL)
   if refresh or not list((cache / "cvelist").glob("*.zip")):
     with _open(CVELIST_API) as r:
       rel = json.load(r)
@@ -198,4 +207,4 @@ def fetch(cache, refresh=False, log=print):
     get(f"overrides/nvd-data-overrides-{sha}.zip", OVERRIDES_ZIP + sha)
     sources["overrides"] = {"file": f"overrides/nvd-data-overrides-{sha}.zip", "commit": sha}
     _prune(cache, sources["overrides"]["file"])
-  return write_manifest(cache, sources, urls)
+  return write_manifest(cache, sources, urls, elts)

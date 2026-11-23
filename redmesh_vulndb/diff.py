@@ -250,7 +250,12 @@ def run_gates(db_path, root, golden=None, baseline=None, limits=None, excused=()
     out["t3_above_max"] = gate_t3(db, {(p, c): r for (p, c), r in allow.items() if r.startswith("open-ended")})
     out["t4_matcher"] = gate_t4(golden)
     if distro_map:  # configured releases must have rows even when the cache lacks the sources
-      out["distro_fix"] = gate_distro(db, distro_map.get("golden", []), {d: distro_map[d]["releases"] for d in ("ubuntu", "debian")})
+      rels = {d: list(distro_map[d]["releases"]) for d in ("ubuntu", "debian")}
+      facts = [g for g in distro_map.get("golden", []) if not g.get("elts")]
+      if db.execute("SELECT 1 FROM meta WHERE k='snapshot_elts'").fetchone():  # the opt-in Freexian source was built in
+        rels["debian"] += distro_map.get("debian_elts", {}).get("releases", [])
+        facts = distro_map.get("golden", [])
+      out["distro_fix"] = gate_distro(db, facts, rels)
     now = pairs(db)
     lost = lost_pairs(baseline if baseline is not None else overlay_pairs(root), now, allow)
     tombstoned = 0
