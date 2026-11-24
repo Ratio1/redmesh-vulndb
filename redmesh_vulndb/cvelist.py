@@ -123,7 +123,10 @@ def cna_constraints(prod, cls, version, lt, lte):
     cs = parse_freetext(v if lt is None and lte is None else f"{v} to {lt or lte}")
     cs = [c for c in cs if all(norm_ver(prod, re.sub(r"^[<>=]+", "", x)) for x in c.split(","))]
     return (cs, "low") if cs else ([], None)
-  return [], None  # range_open, git, na, skip: dropped
+  if cls == "range_open":  # "1.23.3 lessThan *": no row of its own; quality "open" lets the builder use the floor
+    sv = norm_ver(prod, v)
+    return ([">=" + sv], "open") if sv and not re.match(r"^0(\.0)*$", sv) else ([], None)
+  return [], None  # git, na, skip: dropped
 
 
 def cna_rows_of(cna, aliases, stats):
@@ -217,7 +220,7 @@ def ingest(path, aliases, wanted, stats):
       d = json.loads(read_member(z, info))
       cid = d.get("cveMetadata", {}).get("cveId")
       rec = parse_record(d, aliases, stats)
-      if cid in wanted or rec["cna_rows"]:
+      if cid in wanted or any(q != "open" for _, _, q in rec["cna_rows"]):
         out[cid] = rec
       n += 1
   if not n:

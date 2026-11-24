@@ -1,6 +1,7 @@
 import json
 import shutil
 import sqlite3
+from collections import Counter
 
 import pytest
 
@@ -178,3 +179,106 @@ def test_all_configured_supersede_pairs_supersede_in_real_data_shape():
   assert set(real) == pairs and build.superseded_pairs(pairs, affected) == pairs
   exact_only = {("apache", "CVE-2017-9798", "==2.4.0"): ["nvd"]}
   assert build.superseded_pairs(pairs, exact_only) == set()
+
+
+@pytest.mark.parametrize("desc, hit", [
+  ("Apache for Win32 before 1.3.24, and 2.0.x before 2.0.34-beta, allows remote attackers", True),
+  ("The rotatelogs program on Apache before 1.3.28, for Windows and OS/2 systems, does not", True),
+  ("Apache 2.0 through 2.0.39 on Windows, OS2, and Netware allows remote attackers", True),
+  ("Apache before 2.0.44, when running on unpatched Windows 9x and Me operating systems", True),
+  ("Unknown vulnerability in filestat.c for Apache running on OS2, versions 2.0 through 2.0.45", True),
+  ("Apache 1.3.29 and earlier, and Apache 2.0.48 and earlier, when running on Cygwin", True),
+  ("Apache HTTP Server, when running on Linux with a document root on a Windows share mounted", False),
+  ("Apache HTTP Server: DoS in HTTP/2 with initial windows size 0", False),
+])
+def test_non_unix_platform_rule_reads_the_nvd_description(desc, hit):
+  # Old Apache CVEs carry no NVD platform node; the builder flags their rows platform_dependent from this rule.
+  assert bool(build._NON_UNIX_PLATFORM.search(desc)) is hit
+
+
+def test_builder_flags_an_apache_row_from_its_description(monkeypatch, tmp_path):
+  # The fixture's one Apache NVD CVE, given a Win32 description and no platform node, must come out flagged.
+  real = build.nvd.ingest
+  def ingest(*a, **k):
+    recs = real(*a, **k)
+    r = recs["CVE-2001-0766"]
+    r["description"] = "Apache for Win32 before 1.3.24 allows remote attackers to execute commands."
+    r["rows"] = [(p, c, kind, 0) for p, c, kind, _ in r["rows"]]
+    return recs
+  monkeypatch.setattr(build.nvd, "ingest", ingest)
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None)
+  rows = sqlite3.connect(out).execute("SELECT platform_dependent FROM affected WHERE cve_id='CVE-2001-0766'").fetchall()
+  assert rows and all(pd == 1 for (pd,) in rows)
+
+
+def test_cna_quality_routing_in_the_builder(monkeypatch, tmp_path):
+  # A `low` CNA row never lifts a floor; an `open` row is a floor for pairs NVD has and never a row of its own.
+  real = build.cvelist.ingest
+  def ingest(*a, **k):
+    recs = real(*a, **k)
+    recs["CVE-2018-15473"]["cna_rows"] = [("openssh", ">=7.0,<=7.7", "low")]  # NVD has `<=7.7`
+    recs["CVE-2001-0001"] = {**recs["CVE-2018-15473"], "cna_rows": [("openssh", ">=1.3.0", "open")]}
+    return recs
+  monkeypatch.setattr(build.cvelist, "ingest", ingest)
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None)
+  con = sqlite3.connect(out)
+  assert con.execute("SELECT count(*) FROM affected WHERE cve_id='CVE-2001-0001'").fetchone()[0] == 0
+  assert con.execute("SELECT \"constraint\" FROM affected WHERE cve_id='CVE-2018-15473'").fetchall() == [("<=7.7",)]
+
+
+def test_a_structured_cna_row_raises_the_floor_in_the_builder(monkeypatch, tmp_path):
+  real = build.cvelist.ingest
+  def ingest(*a, **k):
+    recs = real(*a, **k)
+    recs["CVE-2018-15473"]["cna_rows"] = [("openssh", ">=7.0,<=7.7", "medium")]  # NVD has `<=7.7`
+    return recs
+  monkeypatch.setattr(build.cvelist, "ingest", ingest)
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None)
+  con = sqlite3.connect(out)
+  assert con.execute("SELECT \"constraint\" FROM affected WHERE cve_id='CVE-2018-15473'").fetchall() == [(">=7.0,<=7.7",)]
+
+
+def _floors(prod, ranges, cna=(), exact=()):
+  """Constraints left after raise_floors for NVD/override `ranges`, CNA constraints `cna`, NVD exact versions `exact`."""
+  affected = {(prod, "CVE-X", c): ["nvd", "firm", "nvd_override", 0, 0] for c in ranges}
+  affected.update({(prod, "CVE-X", f"=={v}"): ["nvd", "tentative", "nvd_exact", 0, 0] for v in exact})
+  build.raise_floors(affected, {(prod, "CVE-X"): list(cna)}, Counter())
+  return sorted(k[2] for k in affected if not k[2].startswith("=="))
+
+
+def test_cna_floor_lifts_a_lower_or_missing_nvd_floor():
+  # CVE-2026-97629, F5 form: 1.31.0<1.31.7, 1.30.0<1.30.6 and the open-ended 1.23.3 lessThan * (floor only, no row)
+  cna = [">=1.31.0,<1.31.7", ">=1.30.0,<1.30.6", ">=1.23.3"]
+  assert _floors("nginx", [">=0.1.29,<=0.9.9", ">=1.0.0,<1.30.6", ">=1.31.0,<1.31.7"], cna) == \
+    [">=0.1.29,<=0.9.9", ">=1.23.3,<1.30.6", ">=1.31.0,<1.31.7"]  # the empty range is not emitted
+  assert _floors("mysql", ["<5.7.19"], [">=5.7.0,<5.7.20"]) == [">=5.7.0,<5.7.19"]
+
+
+def test_cna_floor_is_the_lowest_of_the_pair_and_needs_every_row_to_have_one():
+  assert _floors("wordpress", [">=4.7,<5.4.1"], [">=4.7,<5.3", ">=5.4.0,<5.4.1"]) == [">=4.7,<5.4.1"]  # CVE-2020-11025
+  assert _floors("wordpress", ["<5.4.1"], [">=5.4.0,<5.4.1", "<5.0"]) == ["<5.4.1"]  # one CNA row has no floor
+
+
+def test_floor_is_not_raised_onto_a_row_the_pair_already_has():
+  both = [">=9.11.3,<=9.18.50", ">=9.18.0,<=9.18.50"]
+  assert _floors("bind", both, [">=9.18.0,<=9.18.50"]) == both  # CVE-2026-10723
+
+
+def test_exact_row_floor_for_a_floorless_range():
+  assert _floors("mysql", ["<=5.6.12"], exact=["5.6.3", "5.6.0"]) == [">=5.6.0,<=5.6.12"]  # CVE-2013-5767
+  assert _floors("mysql", ["<5.6.12"], exact=["5.6.0"]) == [">=5.6.0,<5.6.12"]
+  assert _floors("mysql", ["<=5.7.11"]) == ["<=5.7.11"]  # CVE-2016-0667: no exact rows
+
+
+def test_exact_row_floor_needs_a_branch_start_on_one_branch_below_the_bound():
+  assert _floors("wordpress", ["<=2.0.4"], exact=["2.0.2", "2.0.4"]) == ["<=2.0.4"]  # CVE-2006-5705: not a branch start
+  assert _floors("mysql", ["<=5.6.12"], exact=["5.5.9", "5.6.0"]) == ["<=5.6.12"]  # another branch
+  assert _floors("mysql", ["<=5.6.12"], exact=["5.6.0", "5.6.13"]) == ["<=5.6.12"]  # above the bound
+
+
+def test_cna_floor_wins_over_the_exact_row_floor():
+  assert _floors("mysql", ["<=5.6.12"], [">=5.6.0,<=5.6.12"], exact=["5.6.1"]) == [">=5.6.0,<=5.6.12"]
+  assert _floors("mysql", ["<=5.6.12"], [">=5.5.0,<=5.6.12"], exact=["5.6.0"]) == [">=5.5.0,<=5.6.12"]

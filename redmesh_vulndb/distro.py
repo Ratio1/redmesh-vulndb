@@ -7,11 +7,13 @@ Sources (both optional in the cache; `distro_map.toml` names the releases and th
 Row rules. Only (product, CVE) pairs the build already has an `affected` row for get a row.
   Ubuntu: a CVE definition exists for the release. A source package listed in the release pocket as "has been fixed
     (note: 'V')" is `fixed` V; listed as "might be affected" is `open`. A package only listed in an ESM pocket
-    (esm-infra, esm-apps: Ubuntu Pro) is `open` with no version: a host without Pro is not fixed. A package of the
+    (esm-infra, esm-apps, trusty/esm: Ubuntu Pro) is `open` with no version: a host without Pro is not fixed. A package of the
     product that the release carries (it appears in some definition) but this definition does not list is
     `not_affected`. No definition for the CVE: no row (unknown).
   Debian: `resolved` with fixed_version "0" is `not_affected`, `resolved` with a version is `fixed`, `open` and
     `undetermined` are `open`. A package or release the tracker does not list for the CVE: no row.
+  Debian ELTS (opt-in, `--elts`): the Freexian ELTS tracker JSON (`elts/elts-tracker.json`, same format) gives the releases of
+    `[debian_elts]` (buster, bullseye) through the same rules; a release never takes rows from both JSON files.
 """
 import bz2
 import json
@@ -25,7 +27,7 @@ CRITERION = re.compile(r"(\S+) source package in (\S+?), (.*)")
 FIXED = re.compile(r"is affected and has been fixed \(note: '([^']*)'\)\.?")
 VERSION = re.compile(r"[A-Za-z0-9.+~:_-]{1,100}")
 CVE = re.compile(r"CVE-\d{4}-\d{4,}")
-SOURCE = {"ubuntu": "ubuntu_oval", "debian": "debian_tracker"}
+SOURCE = {"ubuntu": "ubuntu_oval", "debian": "debian_tracker", "elts": "debian_elts_tracker"}
 
 
 def package_matcher(spec):
@@ -71,7 +73,7 @@ def parse_oval(path, release, product_of, wanted, stats):
             pkg, pocket, rest = m.groups()
             if pocket == release:
               esm_only = False
-            elif pocket.startswith("esm-") and pocket.endswith("/" + release):
+            elif pocket == release + "/esm" or (pocket.startswith("esm-") and pocket.endswith("/" + release)):  # trusty: "trusty/esm"
               esm_only = True
             else:
               continue
@@ -111,7 +113,7 @@ def ubuntu_rows(release, parsed, product_of, wanted_by_product):
   return rows
 
 
-def debian_rows(path, releases, product_of, wanted_by_product, stats):
+def debian_rows(path, releases, product_of, wanted_by_product, stats, source="debian"):
   with open(path, encoding="utf-8") as f:
     data = json.load(f)
   rows = []
@@ -134,14 +136,14 @@ def debian_rows(path, releases, product_of, wanted_by_product, stats):
         else:
           stats["debian_row_invalid_dropped"] += 1
           continue
-        rows.append(("debian", release, prod, pkg, cve, *out, SOURCE["debian"]))
+        rows.append(("debian", release, prod, pkg, cve, *out, SOURCE[source]))
   return rows
 
 
 def distro_fix_rows(cfg, inp, pairs, stats):
   """Rows of the distro_fix table, or None when the cache holds neither source (or no distro_map.toml exists)."""
   dm = cfg.get("distro")
-  if not dm or not (inp["oval"] or inp["debian"]):
+  if not dm or not (inp["oval"] or inp["debian"] or inp["elts"]):
     return None
   product_of = package_matcher(dm["packages"])
   wanted = {}
@@ -160,6 +162,11 @@ def distro_fix_rows(cfg, inp, pairs, stats):
                      f"{stats['oval_bad_version']} bad version(s); update distro.py")
   if inp["debian"]:
     rows += debian_rows(inp["debian"][-1], dm["debian"]["releases"], product_of, wanted, stats)
+  if inp["elts"]:  # opt-in Freexian source: its releases are the ones the Debian JSON does not carry, never both
+    elts = dm.get("debian_elts", {}).get("releases", [])
+    if set(elts) & set(dm["debian"]["releases"]):
+      raise ValueError(f"release in both [debian] and [debian_elts]: {sorted(set(elts) & set(dm['debian']['releases']))}")
+    rows += debian_rows(inp["elts"][-1], elts, product_of, wanted, stats, "elts")
   for (distro, release), n in Counter((r[0], r[1]) for r in rows).items():
     stats[f"distro_fix {distro} {release}"] = n
   return rows

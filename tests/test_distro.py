@@ -8,7 +8,7 @@ from collections import Counter
 
 import pytest
 
-from redmesh_vulndb import build, cli, diff, distro, fetch
+from redmesh_vulndb import build, cli, diff, distro, fetch, manifest
 
 from .conftest import FIXTURE_CACHE, PLAIN_ROOT, ROOT
 
@@ -116,6 +116,18 @@ def test_ubuntu_three_statuses_absent_package_and_pockets(distro_cache, distro_r
   # CVE-2099-0001 has an OVAL definition but no affected row in the build; CVE-1999-1010 has an affected row but no definition
   assert not any(k[3] in ("CVE-2099-0001", "CVE-1999-1010") for k in got if k[0] == "ubuntu")
   assert {k[3] for k in got if k[0] == "ubuntu"} == {"CVE-2002-0083", "CVE-2002-0639", "CVE-2006-5051", "CVE-2009-1955", "CVE-2004-0747", "CVE-2001-0766"}
+
+
+def test_parse_oval_counts_trusty_esm_pocket_as_esm(tmp_path):
+  path = tmp_path / "t.oval.xml.bz2"
+  oval(path, "trusty", [
+    vuln("CVE-2020-35452", "apache2 source package in trusty/esm, is affected and has been fixed (note: '2.4.7-1ubuntu4.22+esm1')."),
+    vuln("CVE-2014-0002", "apache2 source package in trusty/other, might be affected and may need fixing."),  # unknown pocket
+  ])
+  wanted = {"CVE-2020-35452", "CVE-2014-0002"}
+  defined, main, esm, seen = distro.parse_oval(path, "trusty", lambda p: "apache" if p == "apache2" else None, wanted, Counter())
+  assert defined == wanted and seen == {"apache2"} and main == {}
+  assert esm == {("CVE-2020-35452", "apache2")}
 
 
 def test_debian_statuses_and_missing_entries(distro_cache, distro_root, tmp_path):
@@ -251,5 +263,80 @@ def test_fetch_lists_the_distro_sources(tmp_path, monkeypatch):
     (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
     (tmp_path / rel).touch()
   fetch.fetch(tmp_path, log=lambda *_: None)
-  assert seen == [f"https://security-metadata.canonical.com/oval/com.ubuntu.{r}.cve.oval.xml.bz2" for r in ("focal", "jammy", "noble")] + [
+  plain = list(seen)
+  seen.clear()
+  fetch.fetch(tmp_path, log=lambda *_: None, elts=True)
+  assert seen == plain + [fetch.ELTS_URL]
+  assert plain == [f"https://security-metadata.canonical.com/oval/com.ubuntu.{r}.cve.oval.xml.bz2" for r in ("trusty", "focal", "jammy", "noble")] + [
     "https://security-tracker.debian.org/tracker/data/json"]
+
+
+def elts_setup(distro_cache, distro_root, releases=("buster", "bullseye")):
+  rel = lambda s, v=None: {"status": s, "fixed_version": v}  # noqa: E731
+  (distro_cache / "elts").mkdir()
+  (distro_cache / "elts/elts-tracker.json").write_text(json.dumps({"openssh": {  # the file also lists bookworm: only [debian_elts] releases are read
+    "CVE-2002-0083": {"releases": {"buster": rel("resolved", "1:7.9p1-10+deb10u4"), "bullseye": rel("open"), "bookworm": rel("open")}}}}))
+  (distro_root / "distro_map.toml").write_text((distro_root / "distro_map.toml").read_text().replace(
+    "[packages]", f"[debian_elts]\nreleases = {json.dumps(list(releases))}\n[packages]"))
+
+
+def test_elts_is_opt_in_and_adds_only_its_releases(distro_cache, distro_root, tmp_path):
+  elts_setup(distro_cache, distro_root)
+  fetch.write_manifest(distro_cache)  # without elts=True the file in the cache is not an input
+  off = build.build(distro_cache, tmp_path / "off.sqlite", root=distro_root, log=lambda *_: None)
+  assert not any(k.startswith("elts/") for k in off["inputs"])
+  fetch.write_manifest(distro_cache, elts=True)
+  on = build.build(distro_cache, tmp_path / "on.sqlite", root=distro_root, log=lambda *_: None)
+  assert "elts/elts-tracker.json" in on["inputs"] and on["build_id"] != off["build_id"]
+  got = {k: v for k, v in rows_of(sqlite3.connect(tmp_path / "on.sqlite")).items() if v[2] == "debian_elts_tracker"}
+  assert got == {("debian", "buster", "openssh", "CVE-2002-0083"): ("fixed", "1:7.9p1-10+deb10u4", "debian_elts_tracker"),
+                 ("debian", "bullseye", "openssh", "CVE-2002-0083"): ("open", None, "debian_elts_tracker")}
+  assert diff.run_gates(tmp_path / "on.sqlite", distro_root)["distro_fix"]["detail"]["empty_releases"] == []  # buster, bullseye have rows
+
+
+def test_elts_release_overlapping_the_debian_json_fails_the_build(distro_cache, distro_root, tmp_path):
+  elts_setup(distro_cache, distro_root, releases=("bookworm", "buster"))
+  fetch.write_manifest(distro_cache, elts=True)
+  with pytest.raises(ValueError, match="both"):
+    build.build(distro_cache, tmp_path / "o.sqlite", root=distro_root, log=lambda *_: None)
+
+
+def build_cli(cache, root, out, *flags):
+  return cli.main(["--root", str(root), "build", "--cache", str(cache), "--out", str(out), "--offline", *flags])
+
+
+def test_golden_fact_of_elts_is_checked_only_when_elts_is_built(distro_cache, distro_root, tmp_path):
+  elts_setup(distro_cache, distro_root)
+  fact = ('\n[[golden]]\nelts = true\ndistro = "debian"\nrelease = "buster"\npackage = "openssh"\ncve_id = "CVE-2002-0083"\n'
+          'status = "fixed"\nfixed_version = "1:7.9p1-10+deb10u4"\n')
+  (distro_root / "distro_map.toml").write_text((distro_root / "distro_map.toml").read_text() + fact)
+  fetch.write_manifest(distro_cache)
+  assert build_cli(distro_cache, distro_root, tmp_path / "off.sqlite") == 0  # the fact is skipped: its source is off
+  fetch.write_manifest(distro_cache, elts=True)
+  assert build_cli(distro_cache, distro_root, tmp_path / "on.sqlite", "--elts") == 0
+  (distro_root / "distro_map.toml").write_text((distro_root / "distro_map.toml").read_text().replace("1:7.9p1-10+deb10u4\"\n", "9\"\n"))
+  assert build_cli(distro_cache, distro_root, tmp_path / "bad.sqlite", "--elts") == 1  # a wrong fact fails once the source is on
+
+
+def test_build_elts_flag_must_match_the_cache_manifest(distro_cache, distro_root, tmp_path):
+  elts_setup(distro_cache, distro_root)
+  fetch.write_manifest(distro_cache)
+  with pytest.raises(SystemExit, match="manifest names no ELTS"):
+    build_cli(distro_cache, distro_root, tmp_path / "a.sqlite", "--elts")
+  fetch.write_manifest(distro_cache, elts=True)
+  with pytest.raises(SystemExit, match="names the ELTS input"):
+    build_cli(distro_cache, distro_root, tmp_path / "b.sqlite")
+
+
+def test_release_manifest_refuses_an_elts_build_without_the_override(distro_cache, distro_root, tmp_path, monkeypatch):
+  elts_setup(distro_cache, distro_root)
+  fetch.write_manifest(distro_cache, elts=True)
+  db = tmp_path / "on.sqlite"
+  assert build_cli(distro_cache, distro_root, db, "--elts") == 0
+  zst = tmp_path / "x.zst"
+  zst.write_bytes(b"x")
+  monkeypatch.delenv(manifest.ELTS_RELEASE_ENV, raising=False)
+  with pytest.raises(ValueError, match="Freexian ELTS"):
+    manifest.make(db, zst, distro_cache, built_at="x")
+  monkeypatch.setenv(manifest.ELTS_RELEASE_ENV, "1")
+  assert manifest.make(db, zst, distro_cache, built_at="x")["build_id"]

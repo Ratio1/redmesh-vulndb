@@ -17,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 
 from . import __version__, cvelist, distro, fetch, nvd
-from .versions import MATCHER_REV, validate_constraint
+from .versions import MATCHER_REV, _compare_versions, _parse_version, validate_constraint
 
 _PKG = Path(__file__).resolve().parents[1]
 ROOT = _PKG if (_PKG / "product_map.toml").exists() else Path.cwd()  # data files: next to the package, else the working directory
@@ -54,6 +54,8 @@ CWE = re.compile(r"CWE-\d+")
 VECTOR = re.compile(r"[A-Za-z]{1,3}:[A-Za-z]{1,6}(/[A-Za-z]{1,3}:[A-Za-z]{1,6})*")  # v4 U:Clear|Green|Amber|Red
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 
+
+_NON_UNIX_PLATFORM = re.compile(r"\b(?:on|for)\s+(?:unpatched\s+)?(?:Microsoft\s+)?(?:Windows|Win32|WinNT|OS/?2|NetWare|Cygwin)\b", re.I)
 
 def band(score):
   """Severity band of a CVSS score; UNKNOWN without one."""
@@ -158,13 +160,63 @@ def superseded_pairs(supersede, affected):
   return {(k[0], k[1]) for k in affected if (k[0], k[1]) in supersede and not k[2].startswith("==")}
 
 
+def _floor(cons, prod):
+  """(parsed lower bound or None, upper clause) of a one- or two-clause range constraint."""
+  parts = cons.split(",")
+  low = parts[0] if len(parts) <= 2 and re.fullmatch(r">=?[\d.]+", parts[0]) else None  # plain numeric floors only ("1.5x" is not one)
+  return (_parse_version(low.lstrip(">="), prod) if low else None), parts[-1]
+
+
+def _exact_floor(exact, prod, cons):
+  """Floor for a floorless `<=X` / `<X` range: the lowest NVD exact row of the pair, when that row is a branch start
+  (`X.Y` or `X.Y.0`) and every exact row is on X's major.minor branch at or below X. None otherwise."""
+  m = re.fullmatch(r"<=?(\d+\.\d+(?:\.\d+)*)", cons)
+  if not m or not exact or not all(_parse_version(v, prod) for v in exact):
+    return None
+  branch = ".".join(m.group(1).split(".")[:2])
+  upper = _parse_version(m.group(1), prod)
+  if any(".".join(v.split(".")[:2]) != branch or _compare_versions(_parse_version(v, prod), upper) > 0 for v in exact):
+    return None
+  lowest = min(exact, key=lambda v: _parse_version(v, prod))
+  return lowest if re.fullmatch(r"\d+\.\d+(\.0)?", lowest) else None
+
+
+def raise_floors(affected, cna_floors, stats):
+  """Lift the lower bound of NVD and override ranges; upper bounds never change.
+  1. CNA: F = the lowest floor of the pair's structured CNA rows (none if any of them has no floor). A range with no
+     floor, or a lower one, takes F.
+  2. Else a floorless `<=X` / `<X` range takes the pair's lowest NVD exact row when it is a branch start (`_exact_floor`).
+  A row is never raised onto a constraint the pair already holds, nor onto an invalid (empty) range."""
+  exact_of = {}
+  for prod, cve, cons in affected:
+    if cons.startswith("==") and affected[(prod, cve, cons)][2] == "nvd_exact":
+      exact_of.setdefault((prod, cve), []).append(cons[2:])
+  for key in [k for k in affected if affected[k][2] in ("nvd_range", "nvd_override")]:
+    prod, cve, cons = key
+    nlow, upper = _floor(cons, prod)
+    new, counter = None, None
+    cna = cna_floors.get((prod, cve), [])
+    cna_lows = [_floor(c, prod)[0] for c in cna]
+    if cna and None not in cna_lows:
+      f = min(cna_lows)
+      floorless = nlow is None and "," not in cons  # a range with an unparseable floor ("1.5x") is not floorless
+      if floorless or (nlow is not None and _compare_versions(f, nlow) > 0):
+        new, counter = f">={'.'.join(map(str, f[0]))},{upper}", "floor_from_cna"
+    if new is None and "," not in cons:
+      low = _exact_floor(exact_of.get((prod, cve), []), prod, cons)
+      new, counter = (f">={low},{cons}", "floor_from_exact") if low else (None, None)
+    if new and validate_constraint(new, prod) and (prod, cve, new) not in affected:
+      affected[(prod, cve, new)] = affected.pop(key)
+      stats[counter] += 1
+
+
 def assemble(cfg, cache, stats, baseline_cves=frozenset()):
   """Run the ingest and apply the build rules. Returns (tables, extra meta).
 
   `baseline_cves`: every CVE id of the previous build. One that a feed now rejects becomes a tombstone even
   with no rows left, so it stays visible as REJECTED instead of silently vanishing."""
   manifest = fetch.verify(cache)
-  inp = fetch.inputs(cache, fetch.selected(cache, manifest))  # exactly the files the manifest names
+  inp = fetch.inputs(cache, fetch.selected(cache, manifest), fetch.has_elts(manifest))  # exactly the files the manifest names
   vp2prod = cfg["vp2prod"]
   overrides = nvd.load_overrides(inp["overrides"][-1], vp2prod, stats) if inp["overrides"] else {}
   nrecs = nvd.ingest(inp["nvd"], vp2prod, overrides, stats)
@@ -182,9 +234,13 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     cur = affected.setdefault((prod, cve, cons), [source, conf, reason, pdep, client])
     cur[3] = min(cur[3], pdep)
 
-  nvd_pairs = set()
+  nvd_pairs, cna_floors = set(), {}
   for cve, r in nrecs.items():
+    # NVD gives old Apache CVEs no platform node; their description names the platform. An upstream-build
+    # banner makes Apache rows firm (edge RM-204), so a Windows/OS2/NetWare/Cygwin-only row must stay tentative.
+    windows_only = bool(_NON_UNIX_PLATFORM.search(r.get("description") or ""))
     for prod, cons, kind, pdep in r["rows"]:
+      pdep = 1 if prod == "apache" and windows_only else pdep
       nvd_pairs.add((prod, cve))
       reason = "nvd_override" if r["layer"] == "override" else "nvd_range" if kind == "range" else "nvd_exact"
       add(prod, cve, cons, "nvd", "firm" if kind == "range" else "tentative", reason, pdep)  # override rows: NVD source, same CPE format
@@ -193,10 +249,15 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     for prod, cons, quality in r["cna_rows"]:
       if (prod, cve) in nvd_pairs:
         stats["cna_row_has_nvd"] += 1
+        if quality in ("medium", "open"):  # structured CNA ranges only; free-text and inverse rows carry synthesized floors
+          cna_floors.setdefault((prod, cve), []).append(cons)
+      elif quality == "open":
+        continue  # open-ended row: a floor for pairs NVD has, never a row
       elif quality == "low" and cve not in kev:
         stats["cna_low_dropped"] += 1
       else:
         add(prod, cve, cons, "cna", "tentative", "cna_range")
+  raise_floors(affected, cna_floors, stats)
   curated = {(r["product"], r["cve_id"]) for r in overlay_rows}
   # The component rule runs before supersede (no supersede pair is an OpenSSL CVE today), so a dropped pair never supersedes.
   component_dropped = drop_component_rows(affected, curated, kev, cfg["rules"]["component_products"], stats)
@@ -208,7 +269,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
   for r in overlay_rows:
     if (r["product"], r["cve_id"]) in superseded:
       continue
-    add(r["product"], r["cve_id"], r["constraint"], "curated", "firm", "curated", 0, r["client_side"])
+    add(r["product"], r["cve_id"], r["constraint"], "curated", "firm", "curated", r.get("platform_dependent", 0), r["client_side"])
   client_cves = {r["cve_id"] for r in overlay_rows if r["client_side"]}
   for (prod, cve, cons), row in affected.items():
     if cve in client_cves:
@@ -273,7 +334,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     "overlay_source_commit": cfg["overlay"]["source_commit"],
     "overlay_row_count": str(cfg["overlay"]["row_count"]),
   }
-  for kind in ("oval", "debian"):  # a distro source has no release tag: its snapshot is a hash of its input hashes
+  for kind in ("oval", "debian", "elts"):  # a distro source has no release tag: its snapshot is a hash of its input hashes
     if inp[kind] and "distro_fix" in tables:
       snapshot[f"snapshot_{kind}"] = sha256_bytes("".join(f"{k}:{manifest['inputs'][k]['sha256']}\n" for k in sorted(manifest["inputs"])
                                                          if k.startswith(kind + "/")).encode())[:16]

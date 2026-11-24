@@ -60,3 +60,7 @@ source's current terms before the first release.
 
 The curated overlay (overlay/curated.json) and the product map are RedMesh work. CVE titles and CWE ids in
 the overlay come from the RedMesh catalog, which cites the same sources.
+
+Opt-in source (`build --elts`; NOT in the published release database until Freexian gives written permission)
+   Debian ELTS (buster, bullseye) status derived from the Freexian Extended LTS Security Tracker
+   (https://deb.freexian.com/extended-lts/tracker/), (c) Freexian SARL. Not endorsed by Debian or Freexian. No licence is stated.

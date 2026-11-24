@@ -36,7 +36,8 @@ def test_cna_classifier():
   assert cvelist.classify(">=1.0, <2.0", None, None, None, "affected", None) == "expr"
   assert cvelist.cna_constraints("x", "range", "0", "2.0", None) == (["<2.0"], "medium")
   assert cvelist.cna_constraints("x", "range", "1.0", None, "2.0") == ([">=1.0,<=2.0"], "medium")
-  assert cvelist.cna_constraints("x", "range_open", "1.0", None, None) == ([], None)  # open-ended: dropped
+  assert cvelist.cna_constraints("x", "range_open", "1.0", None, None) == ([">=1.0"], "open")  # open-ended: a floor for the builder, no row
+  assert cvelist.cna_constraints("x", "range_open", "0", None, None) == ([], None)
   assert cvelist.cna_constraints("x", "exact", "1.2.3", None, None) == (["==1.2.3"], "low")
   assert cvelist.parse_freetext("Fixed in 3.0.3 (Affected 3.0.0,3.0.1)") == ["==3.0.0", "==3.0.1"]
   assert cvelist.parse_freetext("5.7.0 and prior") == [">=5.7,<=5.7.0"]

@@ -50,8 +50,12 @@ the checkout of the package, else the working directory.
 ## Rules in short
 
 - NVD ranges for the mapped products, with the anchore overrides layered on CVEs NVD has not analysed. CNA ranges only for a
-  (product, CVE) pair NVD has no row for, reached through exact case-folded vendor/product alias pairs. The curated overlay
-  wins per pair. Open-ended ranges are dropped. An exact row is kept only for `^\d+(\.\d+)*[a-z]?$` or a BIND `-S`/`-P` form;
+  (product, CVE) pair NVD has no row for, reached through exact case-folded vendor/product alias pairs. An NVD or override
+  range with no lower bound, or a lower one, takes the lowest floor of the pair's structured CNA rows, open-ended ones
+  (`X lessThan *`) included as floors only, never as rows (none if any of them has no floor). A floorless `<=X` or `<X`
+  range otherwise takes the pair's lowest NVD exact row when that is a branch start (`X.Y`, `X.Y.0`) and every exact row is
+  on X's branch at or below X. Upper bounds never change, and a floor is never raised onto a row the pair has. The curated
+  overlay wins per pair. Open-ended ranges give no row. An exact row is kept only for `^\d+(\.\d+)*[a-z]?$` or a BIND `-S`/`-P` form;
   pre-releases and odd suffixes (`sp1`, `gamma`, `7.x-1.0`) are dropped. A rejected CVE that has rows becomes a `REJECTED`
   tombstone. `mysql` is not a letter-release product. `vuln.severity` is the overlay severity, else the band of the display score.
   Display CVSS order: CNA v3, NVD v3, ADP v3, then v4.
@@ -63,11 +67,13 @@ the checkout of the package, else the working directory.
 Licence: the published database contains Canonical CVE OVAL data and is distributed under CC BY-SA 4.0 (see `THIRD_PARTY_DATA_NOTICES`).
 
 One row per distro release, source package and CVE: `status` is `fixed` (with the full package version in `fixed_version`),
-`not_affected` or `open`. Sources: Canonical CVE OVAL (focal, jammy, noble; `ubuntu_oval`) and the Debian Security Tracker
+`not_affected` or `open`. Sources: Canonical CVE OVAL (trusty, focal, jammy, noble; `ubuntu_oval`) and the Debian Security Tracker
 JSON (bookworm, trixie; `debian_tracker`; bullseye is no longer in the tracker). Only products of `distro_map.toml` and only
 CVEs that already have an `affected` row for the product. Ubuntu: a CVE definition that does not list the package is
-`not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro) is `open`. Debian: `resolved`
-at version `0` is `not_affected`. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
+`not_affected`; no definition means no row; a package listed only in an ESM pocket (Ubuntu Pro: `esm-*/<release>` or `<release>/esm`) is `open`, which assumes a host
+without Pro. Debian: `resolved`
+at version `0` is `not_affected`. Opt-in, never in a release build (no licence): `fetch --elts` / `build --elts` add the Freexian ELTS tracker JSON (`debian_elts_tracker`) for
+buster and bullseye (`[debian_elts]`); a release takes rows from one Debian JSON only, and the golden facts marked `elts = true` apply only then. The `distro_fix` gate (runs whenever `distro_map.toml` exists) fails on a configured
 release with no rows (also when the sources are missing from the cache) or a wrong golden fact; the build fails on an OVAL phrase it does not understand. A row says what the distribution did, not what a host runs: the reader compares
 the installed package version with `fixed_version`. Without `distro_map.toml` the table is empty and the gate does not run.
 
