@@ -228,6 +228,19 @@ def test_cna_quality_routing_in_the_builder(monkeypatch, tmp_path):
   assert con.execute("SELECT \"constraint\" FROM affected WHERE cve_id='CVE-2018-15473'").fetchall() == [("<=7.7",)]
 
 
+def test_a_structured_cna_row_raises_the_floor_in_the_builder(monkeypatch, tmp_path):
+  real = build.cvelist.ingest
+  def ingest(*a, **k):
+    recs = real(*a, **k)
+    recs["CVE-2018-15473"]["cna_rows"] = [("openssh", ">=7.0,<=7.7", "medium")]  # NVD has `<=7.7`
+    return recs
+  monkeypatch.setattr(build.cvelist, "ingest", ingest)
+  out = tmp_path / "t.sqlite"
+  build.build(FIXTURE_CACHE, out, root=PLAIN_ROOT, log=lambda *_: None)
+  con = sqlite3.connect(out)
+  assert con.execute("SELECT \"constraint\" FROM affected WHERE cve_id='CVE-2018-15473'").fetchall() == [(">=7.0,<=7.7",)]
+
+
 def _floors(prod, ranges, cna=(), exact=()):
   """Constraints left after raise_floors for NVD/override `ranges`, CNA constraints `cna`, NVD exact versions `exact`."""
   affected = {(prod, "CVE-X", c): ["nvd", "firm", "nvd_override", 0, 0] for c in ranges}

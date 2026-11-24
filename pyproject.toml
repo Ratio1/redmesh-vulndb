@@ -1,6 +1,6 @@
 [project]
 name = "redmesh-vulndb"
-version = "0.1.0"
+version = "0.1.1"
 description = "Builder for the RedMesh vulnerability database"
 readme = "README.md"
 requires-python = ">=3.12"
