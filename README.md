@@ -34,7 +34,7 @@ the checkout of the package, else the working directory.
 ## Layout
 
 - `redmesh_vulndb/`: `fetch.py` (cache and manifest), `nvd.py` (NVD feeds and overrides), `cvelist.py` (CNA ranges, CVSS,
-  titles), `versions.py` (the edge-node matcher, vendored at `3205d18`), `build.py` (rules, deterministic writer,
+  titles), `cvss4.py` (v4.0 scorer wrapper), `versions.py` (the edge-node matcher, vendored at `3205d18`), `build.py` (rules, deterministic writer,
   `content_hash`), `distro.py` (Ubuntu OVAL and Debian tracker rows), `diff.py` (diff and gates), `manifest.py` (manifest, flags), `cli.py`.
 - `product_map.toml`: probe product key to NVD `vendor:product` names and reviewed CNA alias pairs.
 - `overlay/curated.json`: the edge-node `CVE_DATABASE` at `3205d18` (374 rows). This repository is its master from now on;
@@ -59,6 +59,11 @@ the checkout of the package, else the working directory.
   pre-releases and odd suffixes (`sp1`, `gamma`, `7.x-1.0`) are dropped. A rejected CVE that has rows becomes a `REJECTED`
   tombstone. `mysql` is not a letter-release product. `vuln.severity` is the overlay severity, else the band of the display score.
   Display CVSS order: CNA v3, NVD v3, ADP v3, then v4.
+  Every v4.0 score is recomputed from its vector (`cvss4.py`, `cvss==3.6`, Red Hat half-up rounding; the feed score is dropped). An
+  invalid, out-of-order or over-long vector keeps a NULL score. Build stats: `cvss_v4_recomputed`, `cvss_v4_mismatch` (feed gap over 0.1 or
+  another band), `cvss_v4_invalid`; the build fails when invalid rows exceed 5 and 1% of v4 rows. The score is that of the vector as given
+  (base, or BT/BE/BTE if the vector carries threat or environmental metrics); the build adds no Threat metric (RM-268 D59). Tests: the
+  FIRST macro-vector table exact, plus a regression check against the library's reference vectors (not FIRST-generated).
 - Gates (all offline): `PRAGMA integrity_check`, schema check, T1 vulhub recall and the 9 prototype regressions, T2 no row fires
   at its first-fixed bound, T3 a version above the maximum bound gives 0 findings, T4 the matcher cases, lost-CVE diff.
 
