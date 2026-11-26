@@ -17,6 +17,7 @@ from collections import Counter
 from pathlib import Path
 
 from . import __version__, cvelist, distro, fetch, nvd
+from .cvss4 import V4VectorError, score_v4
 from .versions import MATCHER_REV, _compare_versions, _parse_version, validate_constraint
 
 _PKG = Path(__file__).resolve().parents[1]
@@ -68,6 +69,32 @@ def keep_cvss(ver, vec, score, stats):
   ok = len(vec) <= 200 and bool(VECTOR.fullmatch(body)) and (score is None or isinstance(score, (int, float)) and 0 <= score <= 10)
   stats["cvss_invalid_dropped"] += not ok
   return ok
+
+
+def rescore(ver, vec, score, stats):
+  """The score to store: v4.0 is recomputed from the vector (RM-170); an unscorable vector gets None, never the feed's score.
+  Counts recomputed, invalid, and mismatched rows (a gap over 0.1 or another band; a gap of exactly 0.1 is rounding)."""
+  if ver != "4.0":
+    return score
+  try:
+    new = score_v4(vec)
+  except V4VectorError:
+    stats["cvss_v4_invalid"] += 1
+    return None
+  stats["cvss_v4_recomputed"] += 1
+  if score is not None and (round(abs(new - score), 1) > 0.1 or band(new) != band(score)):
+    stats["cvss_v4_mismatch"] += 1
+  return new
+
+
+V4_INVALID_FLOOR = 5  # invalid v4 vectors tolerated whatever the total; above it, more than 1% of v4 rows fails the build
+
+
+def check_v4_gate(stats):
+  """Fail the build when the scorer rejects many v4 vectors (a library regression), instead of shipping NULL scores."""
+  bad, total = stats["cvss_v4_invalid"], stats["cvss_v4_invalid"] + stats["cvss_v4_recomputed"]
+  if bad > V4_INVALID_FLOOR and bad * 100 > total:
+    raise RuntimeError(f"v4 scoring gate: {bad} of {total} CVSS v4 rows have an unscorable vector (limit: more than {V4_INVALID_FLOOR} and over 1%)")
 
 
 def clean_str(s, pattern, stats, what):
@@ -296,12 +323,12 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     cwe = clean_str((c or {}).get("cwe") or (n or {}).get("cwe") or (o or {}).get("cwe", ""), CWE, stats, "cwe")
     rows = {}
     for ver, vec, score, src in (c or {}).get("cvss", []):
-      if keep_cvss(ver, vec, score, stats):
-        rows.setdefault((ver, src, vec), score)
+      if keep_cvss(ver, vec, score, stats) and (ver, src, vec) not in rows:  # rescore a new key only: stats count stored rows
+        rows[(ver, src, vec)] = rescore(ver, vec, score, stats)
     cna_have = any(k[1] == "cna" for k in rows)
     for ver, vec, score, src in (n or {}).get("cvss", []):
-      if (src != "cna" or not cna_have) and keep_cvss(ver, vec, score, stats):
-        rows.setdefault((ver, src, vec), score)
+      if (src != "cna" or not cna_have) and keep_cvss(ver, vec, score, stats) and (ver, src, vec) not in rows:
+        rows[(ver, src, vec)] = rescore(ver, vec, score, stats)
     cvss |= {(cve, ver, vec, score, src) for (ver, src, vec), score in rows.items()}
     dv, ds, dsrc = display_cvss([(ver, vec, score, src) for (ver, src, vec), score in rows.items()])
     e = epss.get(cve, (None, None))
@@ -314,6 +341,7 @@ def assemble(cfg, cache, stats, baseline_cves=frozenset()):
     "cvss": sorted(cvss, key=lambda r: (r[0], r[1], r[4], r[2])),
     "eol": sorted(cfg["eol"].items()),
   }
+  check_v4_gate(stats)
   stats["pairs"] = len({(r[0], r[2]) for r in tables["affected"]})
   fix_rows = distro.distro_fix_rows(cfg, inp, {(r[0], r[2]) for r in tables["affected"]}, stats)
   if fix_rows is not None:
